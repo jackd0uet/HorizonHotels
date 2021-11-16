@@ -65,6 +65,11 @@ img {
   max-width: 100%;
   height: auto;
 }
+
+.header a {
+    text-decoration: none;
+    color: white;
+}
 /* For mobile phones */
 [class*="col-"] {
   width: 100%;
