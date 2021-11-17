@@ -51,24 +51,25 @@ html {
 
 .footer {
   background-color: #db5461;
-  color: white;
   text-align: center;
   font-size: 12px;
   padding: 17px;
 }
 
-.footer a {
-  color: white;
-}
 
 img {
-  max-width: 100%;
-  height: auto;
+    max-width: 100%;
+    height: auto;
 }
 
-.header a {
-    text-decoration: none;
-    color: white;
+.extra {
+  padding-top: 150px;
+  padding-bottom: 151px;
+  margin-bottom: 10px;
+}
+a {
+  text-decoration: none;
+  color: white;
 }
 /* For mobile phones */
 [class*="col-"] {
