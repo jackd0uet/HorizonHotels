@@ -41,6 +41,41 @@ html {
   background-color: #4c5b5c;
 }
 
+.menu > ul > li > a {
+  display: block;
+}
+
+.contact_us {
+  padding: 10px;
+  margin: 10px 0;
+  box-shadow: 0 0 15px 4px rgba(0,0,0,0.06);
+  border-radius: 10px;
+  width: 100%;
+  resize: vertical;
+  border: 0;
+}
+
+.search {
+  padding: 10px;
+  margin: 10px 0;
+  box-shadow: 0 0 15px 4px rgba(0,0,0,0.06);
+  border-radius: 10px;
+  width: 100%;
+  resize: vertical;
+  border: 0;
+}
+
+button {
+  appearance: none;
+  padding: 10px;
+  border: none;
+  background-color: #3891a6;
+  color: white;
+  font-weight: 600;
+  border-radius: 5px;
+  width: 100%;
+}
+
 .aside {
   background-color: #3891a6;
   color: white;
@@ -54,6 +89,9 @@ html {
   text-align: center;
   font-size: 12px;
   padding: 17px;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
 }
 
 
@@ -71,6 +109,15 @@ a {
   text-decoration: none;
   color: white;
 }
+
+.room_selection label {
+  margin: 20px;
+}
+
+.room_selection input {
+  margin: 20px;
+}
+
 /* For mobile phones */
 [class*="col-"] {
   width: 100%;
