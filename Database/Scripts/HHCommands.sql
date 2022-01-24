@@ -15,3 +15,15 @@ SELECT t.customerId, t.hotelCity, m.fName, m.lName, m.ADDRESS, m.DoB, e.roomId, 
 FROM RESERVATION t, CUSTOMER m, ROOM e
 where t.customerId = m.customerId and t.roomId = e.roomId
 order by t.customerId;
+
+SELECT * 
+FROM HOTEL
+WHERE capacity <
+	(SELECT AVG(capacity)
+    FROM HOTEL);
+
+UPDATE HOTEL
+SET 
+	capacity = 80
+WHERE
+	hotelCity = 'Cardiff';
