@@ -18,7 +18,7 @@ order by t.customerId;
 
 SELECT * 
 FROM HOTEL
-WHERE capacity <
+WHERE capacity >
 	(SELECT AVG(capacity)
     FROM HOTEL);
 
