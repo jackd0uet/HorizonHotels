@@ -105,5 +105,9 @@ def privacy():
 def terms():
     return render_template('Info/Terms_conditions.html')
 
+@app.route('/test/')
+def test():
+    return render_template('newhomepage.html')
+
 if __name__ == '__main__':
     app.run(debug = True)
