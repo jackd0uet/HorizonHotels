@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Our Cities</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type='text/css' href="{{ url_for('static', filename='styles/main.css') }}" />
+  </head>
+  <body>
+    <div class="header">
+      <h1><a href="{{ url_for('index') }}">Horizon Holidays</a></h1>
+      <h2>Our Cities</h2>
+    </div>
+    <div class="col-3 aside">
+      <a href="{{ url_for('aberdeen') }}">
+        <img src="/static/img/cities/Aberdeen.jpeg" alt="Aberdeen" />
+        Aberdeen</a
+      >
+    </div>
+    <div class="col-3 aside">
+      <a href="{{ url_for('belfast') }}">
+        <img src="/static/img/cities/Belfast.jpeg" alt="Belfast" />
+        Belfast</a
+      >
+    </div>
+    <div class="col-3 aside">
+      <a href="{{ url_for('birmingham') }}">
+        <img src="/static/img/cities/Birmingham.jpeg" alt="Birmingham" />
+        Birmingham</a
+      >
+    </div>
+    <div class="col-3 aside">
+      <img src="/static/img/cities/Bristol.jpeg" alt="Bristol" />
+      <a href="{{ url_for('bristol') }}">Bristol</a>
+    </div>
+    <div class="col-3 aside">
+      <a href="{{ url_for('cardiff') }}">
+        <img src="/static/img/cities/Cardiff.jpeg" alt="Cardiff" />
+        Cardiff</a
+      >
+    </div>
+    <div class="col-3 aside">
+      <a href="{{ url_for('edinburgh') }}">
+        <img src="/static/img/cities/Edinburgh.jpeg" alt="Edinburgh" />
+        Edinburgh</a
+      >
+    </div>
+    <div class="col-3 aside">
+      <a href="{{ url_for('glasgow') }}">
+        <img src="/static/img/cities/Glasgow.jpeg" alt="Glasgow" />
+        Glasgow</a
+      >
+    </div>
+    <div class="col-3 aside">
+      <a href="{{ url_for('london') }}">
+        <img src="/static/img/cities/London.jpeg" alt="London" />
+        London</a
+      >
+    </div>
+    <div class="col-3 aside">
+      <a href="{{ url_for('manchester') }}">
+        <img src="/static/img/cities/Manchester.jpeg" alt="Manchester" />
+        Manchester</a
+      >
+    </div>
+    <div class="col-3 aside">
+      <a href="{{ url_for('newcastle') }}l">
+        <img src="/static/img/cities/Newcastle.jpeg" alt="Newcastle" />
+        Newcastle</a
+      >
+    </div>
+    <div class="col-3 aside">
+      <a href="{{ url_for('norwich') }}">
+        <img src="/static/img/cities/Norwich.jpeg" alt="Norwich" />
+        Norwich</a
+      >
+    </div>
+    <div class="col-3 aside">
+      <a href="{{ url_for('nottingham') }}">
+        <img src="/static/img/cities/Nottingham.jpeg" alt="Nottingham" />
+        Nottingham</a
+      >
+    </div>
+    <div class="col-3 aside">
+      <a href="{{ url_for('oxford') }}">
+        <img src="/static/img/cities/Oxford.jpeg" alt="Oxford" />
+        Oxford</a
+      >
+    </div>
+    <div class="col-3 aside">
+      <a href="{{ url_for('plymouth') }}">
+        <img src="/static/img/cities/Plymouth.jpeg" alt="Plymouth" />
+        Plymouth</a
+      >
+    </div>
+    <div class="col-3 aside">
+      <a href="{{ url_for('swansea') }}">
+        <img src="/static/img/cities/Swansea.jpeg" alt="Swansea" />
+        Swansea</a
+      >
+    </div>
+    <div class="col-3 aside">
+      <a href="{{ url_for('contact') }}"
+        ><img src="/static/img/cities/no_city.png" alt="no city"> <!-- tried changing this to a static image and still does not fit, try a 800x800 image when next get time --></a
+      >
+    </div>
+    <div class="footer">
+      <a href="{{ url_for('privacy') }}">Privacy Statement</a>
+    </div>
+  </body>
+</html>

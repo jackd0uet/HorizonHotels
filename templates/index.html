@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Horizon Holidays - Home</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type='text/css' href="{{ url_for('static', filename='styles/main.css') }}" />
+  </head>
+
+  <body>
+    <div class="header">
+      <h1>Welcome to Horizon Holidays!</h1>
+    </div>
+    <div class="row">
+      <div class="col-3 menu">
+        <ul>
+          <li><a href="{{ url_for('ourCities') }}">Our Cities</a></li>
+          <li><a href="{{ url_for('search') }}">Search</a></li>
+          <li><a href="{{ url_for('about') }}">About us</a></li>
+          <li><a href="{{ url_for('contact') }}">Contact Us</a></li>
+          <li><a href="{{ url_for('myAccount') }}">My Account</a></li>
+        </ul>
+      </div>
+      <div class="col-6">
+        <h2>Who are we?</h2>
+        <p>
+          Horizon Holidays are a recently established UK based hotel firm
+          trusted by everyone from individuals to multi-national corporations.
+          Whether you are looking for a city break in luxury or just a quick
+          stop off, Horizon Holidays has you covered in 15 major UK cities with
+          over 1000 rooms across the country. Don't just take our word for it,
+          read some of our customer reviews below!
+        </p>
+      </div>
+
+      <div class="col-3 aside">
+        <a href="{{ url_for('bristol') }}">
+          <h2>Featured Rooms</h2>
+          <img src="/static/img/double.jpeg" alt="Bristol-double" />
+          Bristol - Double</a
+        >
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-3">
+        <h2>Laura H. - London Double</h2>
+        <p>
+          "Horizon Holidays provided me an easy to use booking system which was
+          then followed by a lovely hotel experience at an affordable price,
+          would fully recommend."
+        </p>
+      </div>
+      <div class="col-3">
+        <h2>John S. - Bristol Single</h2>
+        <p>
+          "Very helpful customer service who helped me to rearrange my booking
+          date!"
+        </p>
+      </div>
+      <div class="col-3">
+        <h2>Anonymous - Aberdeen Family</h2>
+        <p>"Would definitely use again!"</p>
+      </div>
+      <div class="col-3 aside">
+        <a href="{{ url_for('swansea') }}">
+          <img src="/static/img/Swansea-single.jpeg" alt="Swansea-single" />
+          Swansea - Single</a
+        >
+      </div>
+    </div>
+
+    <div class="footer">
+      <a href="{{ url_for('privacy') }}">Privacy Statement</a>
+    </div>
+  </body>
+</html>
