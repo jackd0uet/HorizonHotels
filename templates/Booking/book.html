@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Book</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type='text/css' href="{{ url_for('static', filename='styles/main.css') }}" />
+  </head>
+
+  <body>
+    <h1>Welcome to the booking process...</h1>
+    <h2>You are only a couple of steps away from your dream stay!</h2>
+
+    <form action="/book_confirm/" method="POST">
+      City : {{lookup[0]}} <br/>
+      <input type="hidden" name="city" id="city" value="{{lookup[0]}}"/>
+      Start Date : {{lookup[1]}} <br/>
+      <input type="hidden" name="start" id="start" value="{{lookup[1]}}"/>
+      End Date : {{lookup[2]}} <br/>
+      <input type="hidden" name="end" id="end" value="{{lookup[2]}}"/>
+      Number of Guests : {{lookup[3]}} <br/>
+      <input type="hidden" name="guests" id="guests" value="{{lookup[3]}}"/>
+      Number of Nights : {{lookup[4]}} <br/>
+      <input type="hidden" name="nights" id="nights" value="{{lookup[4]}}"/>
+      Room Type : {{lookup[5]}} <br/>
+      <input type="hidden" name="room" id="room" value="{{lookup[5]}}"/>
+
+
+
+      <table>
+        <tr>
+          <th>Standard Fare</th> <th> Address</th> <th>Your Fare</th>
+          <th>Room Type</th><th>Select</th>
+        </tr>
+
+        {% for row in bookingSet %}
+        <tr>
+          <td>{{row[1]}}</td>
+          <td>{{row[2]}}</td>
+          <td>{{row[3]}}</td>
+          <td>{{row[4]}}</td>
+          <td>{{lookup[5]}}</td>
+          <td><input type="radio" name="choice" value="{{row[0]}}" checked></td>
+          
+        </tr>
+        {% endfor %}
+      </table>
+      <input type="submit" value="Confirm Booking!">
+    </form>
+    
+  </body>
+
+  </html>
