@@ -1,7 +1,14 @@
+from pydoc import render_doc
 from tabnanny import check
 from flask import Flask, render_template, request, url_for, jsonify, redirect
-import dbfunc, mysql.connector
 from datetime import datetime, date
+from functools import wraps
+from passlib.hash import sha256_crypt
+import dbfunc
+import mysql.connector
+import gc
+import hashlib
+
 
 app = Flask(__name__)
 
@@ -136,7 +143,7 @@ def terms():
     return render_template('Info/Terms_conditions.html')
 
 
-@app.route('/book/', methods = ['POST', 'GET'])
+@app.route('/book/', methods=['POST', 'GET'])
 def booking():
     if request.method == 'POST':
         room = request.form['roomType']
@@ -144,33 +151,57 @@ def booking():
         end = request.form['end-date']
         noOfGuests = request.form['guest-no']
         city = request.form['city']
-        totalNights = datetime.strptime(end, '%Y-%m-%d') - datetime.strptime(start, '%Y-%m-%d')
+        totalNights = datetime.strptime(
+            end, '%Y-%m-%d') - datetime.strptime(start, '%Y-%m-%d')
         lookup = [city, start, end, noOfGuests, totalNights.days, room]
 
         conn = dbfunc.getConnection()
         if conn != None:
             print("CONNECTED TO DATABASE: HH_DB")
             dbcursor = conn.cursor()
-            dbcursor.execute('SELECT * FROM hotel WHERE hotelCity = %s;', (city, ))
-            rows = dbcursor.fetchall()
-            datarows=[]
 
-            for row in rows:
-                data = list(row)
-                fare = (int(row[4]) * int(totalNights.days))
-                print(fare)
-                data.append(fare)
-                datarows.append(data)
-            print(datarows)    
-            dbcursor.close()
-            conn.close()
-    
+            dbcursor.execute(
+                'SELECT COUNT(*) FROM hotel WHERE hotelCity = %s and roomType = %s;', (city, room))
+            totalRooms = dbcursor.fetchall()
+            totalRooms = totalRooms[0][0]
+            print(totalRooms)
+
+            dbcursor.execute(
+                'SELECT COUNT(*) FROM v WHERE startDate = %s and endDate = %s and roomType = %s and hotelCity = %s;', (start, end, room, city))
+            roomsBooked = dbcursor.fetchall()
+            roomsBooked = roomsBooked[0][0]
+            print(roomsBooked)
+
+            dbcursor.execute('SELECT * FROM hotel WHERE NOT EXISTS (SELECT * FROM bookings WHERE bookings.roomId = hotel.roomId and bookings.startDate = %s and bookings.endDate = %s) and hotelCity = %s and roomType = %s;', (start, end, city, room))
+            rows = dbcursor.fetchall()
+            datarows = []
+
+            if roomsBooked < totalRooms:
+
+                for row in rows:
+                    data = list(row)
+                    fare = (int(row[4]) * int(totalNights.days))
+                    print(fare)
+                    data.append(fare)
+                    datarows.append(data)
+                print(datarows)
+                dbcursor.close()
+                conn.close()
+
+                return render_template('Booking/book.html', bookingSet=datarows, lookup=lookup)
+
+            else:
+                print("Too many rooms booked on this time already")
+                return render_template('index.html')
+
     # process args
-            return render_template('Booking/book.html', bookingSet = datarows, lookup=lookup)
+
     else:
         print("NOT CONNECTED TO THE DATABASE")
         return redirect(url_for('index'))
-@app.route ('/book_confirm/', methods = ['POST', 'GET'])
+
+
+@app.route('/book_confirm/', methods=['POST', 'GET'])
 def booking_confirm():
     if request.method == 'POST':
         choice = request.form['choice']
@@ -181,13 +212,15 @@ def booking_confirm():
         guests = request.form['guests']
         totalFare = ''
         address = ''
-        nights = datetime.strptime(checkOut, '%Y-%m-%d') - datetime.strptime(checkIn, '%Y-%m-%d')
+        nights = datetime.strptime(
+            checkOut, '%Y-%m-%d') - datetime.strptime(checkIn, '%Y-%m-%d')
 
         conn = dbfunc.getConnection()
         if conn != None:
             print("CONNECTED TO DATABASE: HH_DB")
             dbcursor = conn.cursor()
-            dbcursor.execute('SELECT address, fare FROM hotel where roomId = %s;', (choice, ))
+            dbcursor.execute(
+                'SELECT address, fare FROM hotel where roomId = %s;', (choice, ))
             row = dbcursor.fetchone()
 
             while row is not None:
@@ -200,14 +233,15 @@ def booking_confirm():
             dbcursor.close()
             conn.close()
 
-        bookingData = [choice, room, confCity, address, checkIn, checkOut, guests, totalFare, nights.days]
+        bookingData = [choice, room, confCity, address,
+                       checkIn, checkOut, guests, totalFare, nights.days]
         testDate = '2000-01-01'
         conn = dbfunc.getConnection()
         if conn != None:
             print("CONNECTED TO DATABASE: HH_DB")
             dbcursor = conn.cursor()
-            dbcursor.execute('INSERT INTO bookings (bookingId, customerId, roomId, dateBooked, startDate, endDate, guests, totalFare) VALUES \
-				(1, 1, %s, %s, %s, %s, %s, %s);', (choice, testDate, checkIn, checkOut, guests, totalFare))
+            dbcursor.execute('INSERT INTO bookings (customerId, roomId, dateBooked, startDate, endDate, guests, totalFare) VALUES \
+				(1, %s, %s, %s, %s, %s, %s);', (choice, testDate, checkIn, checkOut, guests, totalFare))
             print('Booking statement executed successfully.')
             conn.commit()
 
@@ -217,5 +251,7 @@ def booking_confirm():
         else:
             print('DB CONNECTION FAILED.')
             return redirect(url_for('index'))
+
+
 if __name__ == '__main__':
     app.run(debug=True)
