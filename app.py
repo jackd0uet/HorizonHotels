@@ -1,6 +1,7 @@
+from crypt import methods
 from pydoc import render_doc
 from tabnanny import check
-from flask import Flask, render_template, request, url_for, jsonify, redirect
+from flask import Flask, render_template, request, url_for, jsonify, redirect, session
 from datetime import datetime, date
 from functools import wraps
 from passlib.hash import sha256_crypt
@@ -29,7 +30,7 @@ def search():
 
 
 @app.route('/account/login/')
-def login():
+def log_in():
     return render_template('Account/Log_in.html')
 
 
@@ -142,6 +143,93 @@ def privacy():
 def terms():
     return render_template('Info/Terms_conditions.html')
 
+
+@app.route('/sign-up/', methods=['POST', 'GET'])
+def sign_up():
+    error = ''
+    if request.method == 'POST':
+        firstName = request.form['fname']
+        lastName = request.form['lname']
+        dateOfBirth = request.form['dob']
+        postcode = request.form['postcode']
+        email = request.form['email']
+        password = request.form['password']
+        passwordConfirm = request.form['confpassword']
+
+
+        if password == passwordConfirm:
+            conn = dbfunc.getConnection()
+
+            if conn != None:
+                print("CONNECTED TO DATABASE: HH_DB")
+                dbcursor = conn.cursor()
+
+                hashedPassword = sha256_crypt.hash((str(password)))
+                verifyQuery = "SELECT * FROM customer WHERE email = %s;"
+                dbcursor.execute(verifyQuery,(email,))
+                rows = dbcursor.fetchall()
+
+                if dbcursor.rowcount > 0:
+                    print("USER ALREADY EXISTS")
+                    error = "This email is already in use, please login or use another email."
+                    return render_template("Account/Sign_up.html", error=error)
+                else:
+                    dbcursor.execute('INSERT INTO customer(fName, lName, dob, postcode, \
+                    email, password) VALUES (%s, %s, %s, %s, %s, %s);',(firstName, \
+                        lastName, dateOfBirth, postcode, email, hashedPassword))
+                    conn.commit()
+                    print("USER CREATED SUCCESSFULLY")
+                    dbcursor.close()
+                    conn.close()
+                    return redirect(url_for('login'))
+  
+                    
+                    # ADD REDIRECT HERE!
+
+            else:
+                print("CONNECTION TO DATABASE FAILED")
+                return redirect(url_for('index'))
+
+        else:
+            alert = True
+            return redirect(url_for('signup'))
+
+
+@app.route('/login/', methods=['POST', 'GET'])
+def login():
+    form = {}
+    error = ''
+
+    if request.method == "POST":
+        email = request.form['email']
+        password = request.form['password']
+        form = request.form
+
+        if email != None and password != None:
+            conn = dbfunc.getConnection()
+            if conn != None:
+                print("CONNECTED TO HH_DB!")
+                dbcursor = conn.cursor()
+                dbcursor.execute("SELECT password FROM customer WHERE email = %s;",\
+                    (email,))
+                data = dbcursor.fetchone()
+                print(data[0])
+
+                if dbcursor.rowcount < 1:
+                    error = "Email or password is incorrect, please try again."
+                    return render_template("Account/Log_in.html", error=error)
+                else:
+                    if sha256_crypt.verify(request.form['password'], str(data[0])):
+                        session['logged_in'] = True
+                        session['username'] = request.form['username']
+                        print('You are now logged in')
+                        return render_template('Account/My_account.html', email=session['email'])
+                    else:
+                        error = "Invalid credentials, please try again"
+            
+            return render_template("Account/Log_in.html", form=form, error=error)
+
+    return render_template('Account/Log_in.html', form=form, error=error)
 
 @app.route('/book/', methods=['POST', 'GET'])
 def booking():
