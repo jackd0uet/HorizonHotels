@@ -158,7 +158,6 @@ def sign_up():
         password = request.form['password']
         passwordConfirm = request.form['confpassword']
 
-
         if password == passwordConfirm:
             conn = dbfunc.getConnection()
 
@@ -168,7 +167,7 @@ def sign_up():
 
                 hashedPassword = sha256_crypt.hash((str(password)))
                 verifyQuery = "SELECT * FROM customer WHERE email = %s;"
-                dbcursor.execute(verifyQuery,(email,))
+                dbcursor.execute(verifyQuery, (email,))
                 rows = dbcursor.fetchall()
 
                 if dbcursor.rowcount > 0:
@@ -177,15 +176,14 @@ def sign_up():
                     return render_template("Account/Sign_up.html", error=error)
                 else:
                     dbcursor.execute('INSERT INTO customer(fName, lName, dob, postcode, \
-                    email, password) VALUES (%s, %s, %s, %s, %s, %s);',(firstName, \
-                        lastName, dateOfBirth, postcode, email, hashedPassword))
+                    email, password) VALUES (%s, %s, %s, %s, %s, %s);', (firstName,
+                                                                         lastName, dateOfBirth, postcode, email, hashedPassword))
                     conn.commit()
                     print("USER CREATED SUCCESSFULLY")
                     dbcursor.close()
                     conn.close()
                     return redirect(url_for('login'))
-  
-                    
+
                     # ADD REDIRECT HERE!
 
             else:
@@ -212,31 +210,45 @@ def login():
             if conn != None:
                 print("CONNECTED TO HH_DB!")
                 dbcursor = conn.cursor()
-                dbcursor.execute("SELECT password FROM customer WHERE email = %s;",\
-                    (email,))
+                dbcursor.execute("SELECT password FROM customer WHERE email = %s;",
+                                 (email,))
                 data = dbcursor.fetchone()
                 print(data[0])
 
                 if dbcursor.rowcount < 1:
                     error = "Email or password is incorrect, please try again."
+                    dbcursor.close()
                     return render_template("Account/Log_in.html", error=error)
                 else:
                     if sha256_crypt.verify(request.form['password'], str(data[0])):
-                        session['logged_in'] = True
-                        session['email'] = request.form['email']
-                        print('You are now logged in')
-                        return render_template('Account/My_account.html', email=session['email'])
+                        conn = dbfunc.getConnection()
+                        if conn != None:
+                            print("CONNECTED TO HH_DB!")
+                            dbcursor = conn.cursor()
+                            dbcursor .execute(
+                                "SELECT fName, lName FROM customer WHERE email = %s;", (email, ))
+                            data=dbcursor.fetchall()
+                            dbcursor.close()
+
+                            session['logged_in'] = True
+                            session['email'] = request.form['email']
+                            session['name'] = data[0][0] + " " + data[0][1]
+                            print('You are now logged in!')
+                            return redirect(url_for('index'))
                     else:
                         error = "Invalid credentials, please try again"
-            
+
             return render_template("Account/Log_in.html", form=form, error=error)
 
     return render_template('Account/Log_in.html', form=form, error=error)
 
+
 @app.route('/logout/')
 def logout():
     session.clear()
-    return 
+    logout = True
+    return render_template('index.html', logout=logout)
+
 
 @app.route('/book/', methods=['POST', 'GET'])
 def booking():
@@ -310,7 +322,6 @@ def booking_confirm():
         nights = datetime.strptime(
             checkOut, '%Y-%m-%d') - datetime.strptime(checkIn, '%Y-%m-%d')
 
-
         if session.get('logged_in') == True:
 
             conn = dbfunc.getConnection()
@@ -332,14 +343,15 @@ def booking_confirm():
                 conn.close()
 
             bookingData = [choice, room, confCity, address,
-                        checkIn, checkOut, guests, totalFare, nights.days]
+                           checkIn, checkOut, guests, totalFare, nights.days]
             testDate = '2000-01-01'
             conn = dbfunc.getConnection()
             if conn != None:
                 print("CONNECTED TO DATABASE: HH_DB")
                 dbcursor = conn.cursor()
 
-                dbcursor.execute('SELECT customerId FROM customer WHERE email = %s', (session.get('email'), ))
+                dbcursor.execute(
+                    'SELECT customerId FROM customer WHERE email = %s', (session.get('email'), ))
                 loggedInCustomerId = dbcursor.fetchall()
                 loggedInCustomerId = loggedInCustomerId[0][0]
 
@@ -357,7 +369,7 @@ def booking_confirm():
 
         else:
             login = False
-            return render_template(url_for('myAccount', login))
+            return redirect(url_for('myAccount', login=login))
 
 
 if __name__ == '__main__':

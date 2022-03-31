@@ -3,18 +3,35 @@
   <head>
     <title>Horizon Holidays - Home</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" type='text/css' href="{{ url_for('static', filename='styles/main.css') }}" />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{{ url_for('static', filename='styles/main.css') }}"
+    />
+    <script>
+      function logoutFunc() {
+        alert("You have successfully logged out!");
+      }
+    </script>
   </head>
 
   <body>
     <div class="header">
       <h1>Welcome to Horizon Holidays!</h1>
 
-
       {% if "logged_in" in session: %}
-        <a href="{{ url_for('index') }}"></a><button onclick="window.location.href='logout';">Log Out</button>
+      <p>Hello {{session['name']}}, what can we do for you today?</p>
+      <a href="{{ url_for('index') }}"></a
+      ><button onclick="window.location.href='logout';">Log Out</button>
       {% else %}
-        <a href="{{ url_for('myAccount') }}">Log In / Sign up</a>
+      <a href="{{ url_for('myAccount') }}">Log In / Sign up</a>
+      {% endif %} 
+      
+      
+      {% if logout: %}
+      <script>
+        window.onload = logoutFunc();
+      </script>
       {% endif %}
 
     </div>
