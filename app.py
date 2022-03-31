@@ -13,6 +13,8 @@ import hashlib
 
 app = Flask(__name__)
 
+app.config.update(SECRET_KEY='osd(7:?[??jr??M7?H?')
+
 
 @app.route('/')
 def index():
@@ -221,7 +223,7 @@ def login():
                 else:
                     if sha256_crypt.verify(request.form['password'], str(data[0])):
                         session['logged_in'] = True
-                        session['username'] = request.form['username']
+                        session['email'] = request.form['email']
                         print('You are now logged in')
                         return render_template('Account/My_account.html', email=session['email'])
                     else:
@@ -230,6 +232,11 @@ def login():
             return render_template("Account/Log_in.html", form=form, error=error)
 
     return render_template('Account/Log_in.html', form=form, error=error)
+
+@app.route('/logout/')
+def logout():
+    session.clear()
+    return 
 
 @app.route('/book/', methods=['POST', 'GET'])
 def booking():
@@ -303,42 +310,54 @@ def booking_confirm():
         nights = datetime.strptime(
             checkOut, '%Y-%m-%d') - datetime.strptime(checkIn, '%Y-%m-%d')
 
-        conn = dbfunc.getConnection()
-        if conn != None:
-            print("CONNECTED TO DATABASE: HH_DB")
-            dbcursor = conn.cursor()
-            dbcursor.execute(
-                'SELECT address, fare FROM hotel where roomId = %s;', (choice, ))
-            row = dbcursor.fetchone()
 
-            while row is not None:
-                data = list(row)
-                totalFare = (int(row[1]) * int(nights.days))
-                print(totalFare)
-                address = row[0]
+        if session.get('logged_in') == True:
+
+            conn = dbfunc.getConnection()
+            if conn != None:
+                print("CONNECTED TO DATABASE: HH_DB")
+                dbcursor = conn.cursor()
+                dbcursor.execute(
+                    'SELECT address, fare FROM hotel where roomId = %s;', (choice, ))
                 row = dbcursor.fetchone()
 
-            dbcursor.close()
-            conn.close()
+                while row is not None:
+                    data = list(row)
+                    totalFare = (int(row[1]) * int(nights.days))
+                    print(totalFare)
+                    address = row[0]
+                    row = dbcursor.fetchone()
 
-        bookingData = [choice, room, confCity, address,
-                       checkIn, checkOut, guests, totalFare, nights.days]
-        testDate = '2000-01-01'
-        conn = dbfunc.getConnection()
-        if conn != None:
-            print("CONNECTED TO DATABASE: HH_DB")
-            dbcursor = conn.cursor()
-            dbcursor.execute('INSERT INTO bookings (customerId, roomId, dateBooked, startDate, endDate, guests, totalFare) VALUES \
-				(1, %s, %s, %s, %s, %s, %s);', (choice, testDate, checkIn, checkOut, guests, totalFare))
-            print('Booking statement executed successfully.')
-            conn.commit()
+                dbcursor.close()
+                conn.close()
 
-            dbcursor.close()
-            conn.close()
-            return render_template('Booking/confirm.html', resultset=bookingData)
+            bookingData = [choice, room, confCity, address,
+                        checkIn, checkOut, guests, totalFare, nights.days]
+            testDate = '2000-01-01'
+            conn = dbfunc.getConnection()
+            if conn != None:
+                print("CONNECTED TO DATABASE: HH_DB")
+                dbcursor = conn.cursor()
+
+                dbcursor.execute('SELECT customerId FROM customer WHERE email = %s', (session.get('email'), ))
+                loggedInCustomerId = dbcursor.fetchall()
+                loggedInCustomerId = loggedInCustomerId[0][0]
+
+                dbcursor.execute('INSERT INTO bookings (customerId, roomId, dateBooked, startDate, endDate, guests, totalFare) VALUES \
+                    (%s, %s, %s, %s, %s, %s, %s);', (loggedInCustomerId, choice, testDate, checkIn, checkOut, guests, totalFare))
+                print('Booking statement executed successfully.')
+                conn.commit()
+
+                dbcursor.close()
+                conn.close()
+                return render_template('Booking/confirm.html', resultset=bookingData)
+            else:
+                print('DB CONNECTION FAILED.')
+                return redirect(url_for('index'))
+
         else:
-            print('DB CONNECTION FAILED.')
-            return redirect(url_for('index'))
+            login = False
+            return render_template(url_for('myAccount', login))
 
 
 if __name__ == '__main__':

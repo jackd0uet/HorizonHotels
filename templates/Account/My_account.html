@@ -4,16 +4,32 @@
     <title>Horizon Holidays - My Account</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" type='text/css' href="{{ url_for('static', filename='styles/main.css') }}" />
+  <script>function loginCheck() {alert("You are not logged in, please sign up or login!");}</script>
+  
   </head>
 
 
 <body>
+
+    {% if login == False: %}
+      <p onload="loginCheck()"></p>
+    {% endif %}
     <div class="header">
         <a href="{{ url_for('index') }}"><h1>Horizon Holidays</h1></a>
         <h2>My Account</h2>
       </div>
-    <h1>placeholder text for if the user is signed up.</h1>
 
+      <div class="col-3"></div>
+
+    <div class="col-3">
+      <a href="{{ url_for('log_in') }}"><button>Login</button></a>
+    </div>
+
+    <div class="col-3">
+      <a href="{{ url_for('signup') }}"><button>Sign up</button></a>
+    </div>
+
+    <div class="col-3"></div>
 
 <div class="footer">
     <a href="{{ url_for('privacy') }}">Privacy Statement</a>

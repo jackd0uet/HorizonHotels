@@ -9,6 +9,14 @@
   <body>
     <div class="header">
       <h1>Welcome to Horizon Holidays!</h1>
+
+
+      {% if "logged_in" in session: %}
+        <a href="{{ url_for('index') }}"></a><button onclick="window.location.href='logout';">Log Out</button>
+      {% else %}
+        <a href="{{ url_for('myAccount') }}">Log In / Sign up</a>
+      {% endif %}
+
     </div>
     <div class="row">
       <div class="col-3 menu">
