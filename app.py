@@ -16,6 +16,13 @@ app = Flask(__name__)
 app.config.update(SECRET_KEY='osd(7:?[??jr??M7?H?')
 
 
+@app.route('/test/')
+def test():
+    return render_template('base.html')
+
+
+
+
 @app.route('/')
 def index():
     return render_template('index.html')

@@ -23,6 +23,17 @@ html {
   padding: 15px;
 }
 
+nav {
+  background-color: #db5461;
+  color: white;
+  padding: 15px;
+  list-style-type: none;
+}
+
+nav ul {
+  list-style-type: none;
+}
+
 .menu ul {
   list-style-type: none;
   margin: 0;
