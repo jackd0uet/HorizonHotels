@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block header %}
+    <h1>{% block title %} Your booking has been cancelled! {% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+
+<h4>You have successfully cancelled your booking!</h4>
+<p>Your booking reference is: {{bookId}}</p>
+<p>You have been refunded: £{{refund}}</p>
+<h5>You will still be able to find details of this booking in your MyAccount page.</h5>
+<p><a href="{{ url_for('account') }}">Return to your Account!</a></p>
+
+
+{% endblock %}

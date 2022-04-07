@@ -7,16 +7,16 @@
 {% block content %}
 
 <div class="row">
-    <div class="col-3 menu">
+    <div class="col-3 col-s-3 menu">
       <ul>
         <li><a href="{{ url_for('ourCities') }}">Our Cities</a></li>
         <li><a href="{{ url_for('search') }}">Search</a></li>
         <li><a href="{{ url_for('about') }}">About us</a></li>
         <li><a href="{{ url_for('contact') }}">Contact Us</a></li>
-        <li><a href="{{ url_for('myAccount') }}">My Account</a></li>
+        <li><a href="{{ url_for('account') }}">My Account</a></li>
       </ul>
     </div>
-    <div class="col-6">
+    <div class="col-6 col-s-6">
       <h2>Who are we?</h2>
       <p>
         Horizon Holidays are a recently established UK based hotel firm
@@ -28,7 +28,7 @@
       </p>
     </div>
 
-    <div class="col-3 aside">
+    <div class="col-3 col-s-3 aside">
       <a href="{{ url_for('bristol') }}">
         <h2>Featured Rooms</h2>
         <img src="/static/img/double.jpeg" alt="Bristol-double" />
@@ -37,7 +37,7 @@
     </div>
   </div>
   <div class="row">
-    <div class="col-3">
+    <div class="col-3 col-s-3">
       <h2>Laura H. - London Double</h2>
       <p>
         "Horizon Holidays provided me an easy to use booking system which was
@@ -45,18 +45,18 @@
         would fully recommend."
       </p>
     </div>
-    <div class="col-3">
+    <div class="col-3 col-s-3">
       <h2>John S. - Bristol Single</h2>
       <p>
         "Very helpful customer service who helped me to rearrange my booking
         date!"
       </p>
     </div>
-    <div class="col-3">
+    <div class="col-3 col-s-3">
       <h2>Anonymous - Aberdeen Family</h2>
       <p>"Would definitely use again!"</p>
     </div>
-    <div class="col-3 aside">
+    <div class="col-3 col-s-3 aside">
       <a href="{{ url_for('swansea') }}">
         <img src="/static/img/Swansea-single.jpeg" alt="Swansea-single" />
         Swansea - Single</a

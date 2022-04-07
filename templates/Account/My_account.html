@@ -1,38 +1,78 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <title>Horizon Holidays - My Account</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" type='text/css' href="{{ url_for('static', filename='styles/main.css') }}" />
-  <script>function loginCheck() {alert("You are not logged in, please sign up or login!");}</script>
-  
-  </head>
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %} My account {% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+
+<h2>My Bookings:</h1>
+<form action="/account/modify_booking/" method="POST">
+<table>
+  <tr>
+    <th>Booking ID</th>
+    <th>Room Id</th>
+    <th>Date Booked</th>
+    <th>Start of Booking</th>
+    <th>End of Booking</th>
+    <th>Total Guests</th>
+    <th>Amount Paid</th>
+    <th>Room Type</th>
+    <th>City</th>
+    <th>Address</th>
+  </tr>
+
+{% for row in bookingData %}
+  <tr>
+    <td>{{row[0]}}</td>
+    <td>{{row[2]}}</td>
+    <td>{{row[3]}}</td>
+    <td>{{row[4]}}</td>
+    <td>{{row[5]}}</td>
+    <td>{{row[6]}}</td>
+    <td>{{row[7]}}</td>
+    <td>{{row[8]}}</td>
+    <td>{{row[9]}}</td>
+    <td>{{row[10]}}</td>
+    <td><input type="radio" name="modifyBooking" id="modifyBooking" value="{{row[0]}}" checked></td>
+  </tr>  
+{% endfor %}
+</table>
+<input type="submit" value="Edit Selected booking!">
+</form>
+
+{% if count > 0: %}
+  <h2>Cancelled Bookings:</h2>
+  <table>
+    <tr>
+      <th>Booking ID</th>
+      <th>Room ID</th>
+      <th>Date Booked</th>
+      <th>Start Date</th>
+      <th>End Date</th>
+      <th>Date Cancelled</th>
+      <th>Guests</th>
+      <th>Total Paid</th>
+      <th>Total Refunded</th>
+    </tr>
+    {% for row in cancelledData %}
+    <tr>
+      <td>{{row[0]}}</td>
+      <td>{{row[2]}}</td>
+      <td>{{row[3]}}</td>
+      <td>{{row[4]}}</td>
+      <td>{{row[5]}}</td>
+      <td>{{row[6]}}</td>
+      <td>{{row[7]}}</td>
+      <td>{{row[8]}}</td>
+      <td>{{row[9]}}</td>
+      <td>{{row[10]}}</td>
+    </tr>
+    {% endfor %}
+  </table>
+{% endif %}
 
 
-<body>
+{% endblock %}
 
-    {% if login == False: %}
-      <p onload="loginCheck()"></p>
-    {% endif %}
-    <div class="header">
-        <a href="{{ url_for('index') }}"><h1>Horizon Holidays</h1></a>
-        <h2>My Account</h2>
-      </div>
 
-      <div class="col-3"></div>
-
-    <div class="col-3">
-      <a href="{{ url_for('log_in') }}"><button>Login</button></a>
-    </div>
-
-    <div class="col-3">
-      <a href="{{ url_for('signup') }}"><button>Sign up</button></a>
-    </div>
-
-    <div class="col-3"></div>
-
-<div class="footer">
-    <a href="{{ url_for('privacy') }}">Privacy Statement</a>
-  </div>
-</body>
-</html>

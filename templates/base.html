@@ -20,10 +20,10 @@
     {% if "logged_in" in session: %}
         <li><h2>{{session['name']}}, what can we do for you today?</h2></li>
         <li><span></li><a href="{{  url_for('index') }}"></a
-        ><button onclick="window.location.href='logout';">Log out</button></span>
+        ><button class="navbarButtons" onclick="window.location.href='logout';">Log out</button></span>
     {% else %}
-        <li><span><a href="{{ url_for('log_in') }}">Log In</a></span></li>
-        <li><span><a href="{{ url_for('signup') }}">Sign Up</a></span></li>
+        <li class="navbar"><span><button class="navbarButtons" onclick="window.location.href='login';">Log In</button></span></li>
+        <li class="navbar"><span><button class="navbarButtons" onclick="window.location.href='signup';">Sign Up</button></span></li>
     {% endif %} 
   </ul>
 </nav>
