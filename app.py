@@ -1,7 +1,6 @@
 from crypt import methods
 from pydoc import render_doc
 from tabnanny import check
-from this import d
 from flask import Flask, render_template, request, url_for, jsonify, redirect, session
 from datetime import datetime, date
 from functools import wraps
@@ -259,7 +258,7 @@ def login():
     return render_template('Account/Log_in.html', form=form, error=error)
 
 
-@app.route('/logout/')
+@app.route('/account/my_account/logout/')
 def logout():
     session.clear()
     logout = True
@@ -274,8 +273,12 @@ def booking():
         end = request.form['end-date']
         noOfGuests = request.form['guest-no']
         city = request.form['city']
-        totalNights = datetime.strptime(
-            end, '%Y-%m-%d') - datetime.strptime(start, '%Y-%m-%d')
+
+        startDate = datetime.strptime(start, '%Y-%m-%d')
+        endDate = datetime.strptime(
+            end, '%Y-%m-%d')
+        totalNights =  endDate - startDate
+
         lookup = [city, start, end, noOfGuests, totalNights.days, room]
 
         if session.get('logged_in') == True:
@@ -289,31 +292,50 @@ def booking():
                     'SELECT COUNT(*) FROM hotel WHERE hotelCity = %s and roomType = %s;', (city, room))
                 totalRooms = dbcursor.fetchall()
                 totalRooms = totalRooms[0][0]
-                print(totalRooms)
 
                 dbcursor.execute(
                     'SELECT COUNT(*) FROM v WHERE startDate = %s and endDate = %s and roomType = %s and hotelCity = %s;', (start, end, room, city))
                 roomsBooked = dbcursor.fetchall()
                 roomsBooked = roomsBooked[0][0]
-                print(roomsBooked)
 
                 dbcursor.execute('SELECT * FROM hotel WHERE NOT EXISTS (SELECT * FROM bookings WHERE bookings.roomId = hotel.roomId and bookings.startDate = %s and bookings.endDate = %s) and hotelCity = %s and roomType = %s;', (start, end, city, room))
                 rows = dbcursor.fetchall()
                 datarows = []
 
+                peakStart = datetime(startDate.year, 4, 1)
+                peakEnd = datetime(startDate.year, 10, 1)
+
+                todaysDate = datetime.today()
+                dateDifference = startDate - todaysDate
+                dateDifference = dateDifference.days
+            
+                if dateDifference > 80:
+                    discount = .8
+                elif dateDifference >= 60 and dateDifference <= 79:
+                    discount = .9
+                elif dateDifference >= 45 and dateDifference <= 59:
+                    discount = .95
+                else:
+                    discount = 1
+
                 if roomsBooked < totalRooms:
 
                     for row in rows:
                         data = list(row)
-                        fare = (int(row[4]) * int(totalNights.days))
-                        print(fare)
+                        if  peakStart <= startDate <= peakEnd and peakStart <= endDate <= peakEnd:
+                            fare = (int(row[4]) * int(totalNights.days))
+                            fare = fare * discount
+                            peakStatus = True
+                        else:
+                            fare = (int(row[5]) * int(totalNights.days))
+                            fare = fare * discount
+                            peakStatus = False
                         data.append(fare)
                         datarows.append(data)
-                    print(datarows)
                     dbcursor.close()
                     conn.close()
 
-                    return render_template('Booking/book.html', bookingSet=datarows, lookup=lookup)
+                    return render_template('Booking/book.html', bookingSet=datarows, lookup=lookup, status=peakStatus)
 
                 else:
                     print("Too many rooms booked on this time already")
@@ -338,32 +360,15 @@ def booking_confirm():
         checkIn = request.form['start']
         checkOut = request.form['end']
         guests = request.form['guests']
-        totalFare = ''
-        address = ''
+        totalFare = request.form['totalFare']
+        address = request.form['address']
         nights = datetime.strptime(
             checkOut, '%Y-%m-%d') - datetime.strptime(checkIn, '%Y-%m-%d')
-
-        conn = dbfunc.getConnection()
-        if conn != None:
-            print("CONNECTED TO DATABASE: HH_DB")
-            dbcursor = conn.cursor()
-            dbcursor.execute(
-                'SELECT address, fare FROM hotel where roomId = %s;', (choice, ))
-            row = dbcursor.fetchone()
-
-            while row is not None:
-                data = list(row)
-                totalFare = (int(row[1]) * int(nights.days))
-                print(totalFare)
-                address = row[0]
-                row = dbcursor.fetchone()
-
-            dbcursor.close()
-            conn.close()
 
         bookingData = [choice, room, confCity, address,
                        checkIn, checkOut, guests, totalFare, nights.days]
         todaysDate = date.today()
+
         conn = dbfunc.getConnection()
         if conn != None:
             print("CONNECTED TO DATABASE: HH_DB")

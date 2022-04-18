@@ -117,7 +117,7 @@ CREATE VIEW FULLBOOKINGINFO as select b.bookingId, b.customerId, b.roomId, b.dat
     
     DROP TABLE cancelledBookings;
     
-    SELECT * FROM bookings WHERE bookingId = 4;
+    SELECT * FROM bookings;
     DELETE FROM bookings WHERE bookingId = 4;
     SELECT * FROM cancelledBookings;
     SELECT COUNT(*) FROM cancelledBookings WHERE customerId=3;
@@ -125,3 +125,22 @@ CREATE VIEW FULLBOOKINGINFO as select b.bookingId, b.customerId, b.roomId, b.dat
     
     INSERT INTO cancelledBookings(bookingId, customerId, roomId, dateBooked, startDate, endDate, dateCancelled, guests, totalFare, totalRefunded) VALUES
 		(1, 3, 1, '2000-01-01', '2000-01-01', '2000-01-01', '2000-01-01', 1, 140, 140);
+        
+        
+
+ALTER TABLE hotel
+ADD COLUMN offPeakFare DOUBLE NOT NULL DEFAULT 50.00;
+
+SELECT * FROM hotel LIMIT 900, 2000;
+
+UPDATE hotel
+SET
+	offPeakFare = 60
+WHERE
+	hotelCity = 'Aberdeen';
+    
+
+INSERT INTO hotel(roomType, hotelCity, address, fare, offPeakFare) VALUES ('Standard', 'Bristol', 'BS1 1SD', 140, 70);
+
+DELETE FROM hotel WHERE hotelCity = 'Norwich';
+    

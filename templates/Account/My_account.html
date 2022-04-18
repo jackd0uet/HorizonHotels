@@ -1,10 +1,34 @@
 {% extends 'base.html' %}
 
 {% block header %}
-  <h1>{% block title %} My account {% endblock %}</h1>
 {% endblock %}
 
 {% block content %}
+
+<script>
+  function logoutFunc() {
+    alert("You have successfully logged out!");
+  }
+</script>
+
+<nav>
+<ul>
+  {% if "logged_in" in session: %}
+      <li><h2>{{session['name']}}, what can we do for you today?</h2></li>
+      <li><span></li><a href="{{  url_for('index') }}"></a
+      ><button class="navbarButtons" onclick="window.location.href='logout';">Log out</button></span>
+  {% else %}
+      <li class="navbar"><span><button class="navbarButtons" onclick="window.location.href='login';">Log In</button></span></li>
+      <li class="navbar"><span><button class="navbarButtons" onclick="window.location.href='signup';">Sign Up</button></span></li>
+  {% endif %} 
+</ul>
+</nav>
+
+{% if logout: %}
+  <script>
+      window.onload = logoutFunc();
+  </script>
+{% endif %}
 
 <h2>My Bookings:</h1>
 <form action="/account/modify_booking/" method="POST">

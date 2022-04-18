@@ -28,21 +28,25 @@
 
       <table>
         <tr>
-          <th>Standard Fare</th> <th> Address</th> <th>Your Fare</th>
+          <th>Nightly Fare</th> <th> Address</th> <th>Total Fare</th>
           <th>Room Type</th><th>Select</th>
         </tr>
 
-        {% for row in bookingSet %}
+
         <tr>
-          <td>{{row[1]}}</td>
-          <td>{{row[2]}}</td>
-          <td>{{row[3]}}</td>
-          <td>{{row[4]}}</td>
-          <td>{{lookup[5]}}</td>
-          <td><input type="radio" name="choice" value="{{row[0]}}" checked></td>
+          {% if status == True: %}
+            <td>{{bookingSet[0][4]}}</td>
+          {% else: %}
+            <td>{{bookingSet[0][5]}}</td>
+          {% endif %}
+          <td>{{bookingSet[0][3]}}</td>
+          <td>{{bookingSet[0][6]}}</td>
+          <td>{{bookingSet[0][1]}}</td>
+          <td><input type="radio" name="choice" value="{{bookingSet[0][0]}}" checked></td>
           
         </tr>
-        {% endfor %}
+              <input type="hidden" name="address" value="{{bookingSet[0][3]}}">
+              <input type="hidden" name="totalFare" value="{{bookingSet[0][6]}}">
       </table>
       <input type="submit" value="Confirm Booking!">
     </form>

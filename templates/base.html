@@ -8,31 +8,11 @@
   type="text/css"
   href="{{ url_for('static', filename='styles/main.css') }}"
 />
-<script>
-    function logoutFunc() {
-      alert("You have successfully logged out!");
-    }
-  </script>
 
 <nav>
   <h1>Horizon Holidays</h1>
-  <ul>
-    {% if "logged_in" in session: %}
-        <li><h2>{{session['name']}}, what can we do for you today?</h2></li>
-        <li><span></li><a href="{{  url_for('index') }}"></a
-        ><button class="navbarButtons" onclick="window.location.href='logout';">Log out</button></span>
-    {% else %}
-        <li class="navbar"><span><button class="navbarButtons" onclick="window.location.href='login';">Log In</button></span></li>
-        <li class="navbar"><span><button class="navbarButtons" onclick="window.location.href='signup';">Sign Up</button></span></li>
-    {% endif %} 
-  </ul>
 </nav>
 
-{% if logout: %}
-    <script>
-        window.onload = logoutFunc();
-    </script>
-{% endif %}
 <section class="content">
     <header>
         {% block header %}{% endblock %}
