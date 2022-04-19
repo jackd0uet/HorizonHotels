@@ -143,4 +143,29 @@ WHERE
 INSERT INTO hotel(roomType, hotelCity, address, fare, offPeakFare) VALUES ('Standard', 'Bristol', 'BS1 1SD', 140, 70);
 
 DELETE FROM hotel WHERE hotelCity = 'Norwich';
+
+SELECT * FROM bookings;
+ALTER TABLE customer
+ADD COLUMN userType VARCHAR(20) NOT NULL DEFAULT 'STANDARD';
+
+USE HH_DB;
+
+SELECT * FROM HOTEL LIMIT 0,2000;
+UPDATE hotel SET offPeakFare = 50 WHERE roomType = "Double" and hotelCity = "Swansea";
+
+
+USE TEST_DB;
+
+CREATE TABLE TEST1 (
+ value int not null default 1);
+
+select * from TEST1;
+
+insert into test1(value) values (70);
+
+UPDATE TEST1 SET value = value * 1.5 WHERE value = 60;
     
+UPDATE hotel SET fare = fare * 1.2 WHERE roomType = "Double";
+
+UPDATE hotel SET offPeakFare = offPeakFare * 1.2 WHERE roomType = "Double";
+

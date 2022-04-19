@@ -4,6 +4,7 @@ from tabnanny import check
 from flask import Flask, render_template, request, url_for, jsonify, redirect, session
 from datetime import datetime, date
 from functools import wraps
+from numpy import double
 from passlib.hash import sha256_crypt
 import dbfunc
 import mysql.connector
@@ -302,6 +303,10 @@ def booking():
                 rows = dbcursor.fetchall()
                 datarows = []
 
+                dbcursor.execute('SELECT fare, offPeakFare FROM hotel WHERE roomType = "Standard" and hotelCity = %s', (city, ))
+                standardRoomData = dbcursor.fetchall()
+                standardRoomData = standardRoomData[0]
+
                 peakStart = datetime(startDate.year, 4, 1)
                 peakEnd = datetime(startDate.year, 10, 1)
 
@@ -323,18 +328,28 @@ def booking():
                     for row in rows:
                         data = list(row)
                         if  peakStart <= startDate <= peakEnd and peakStart <= endDate <= peakEnd:
-                            fare = (int(row[4]) * int(totalNights.days))
+                            if room == "Double" and int(noOfGuests) > 1:
+                                doubleIncrease = standardRoomData[0] * .1
+                            else:
+                                doubleIncrease = 0
+                            fare = doubleIncrease
+                            fare = fare + ((int(row[4]) * int(totalNights.days)))
                             fare = fare * discount
                             peakStatus = True
                         else:
-                            fare = (int(row[5]) * int(totalNights.days))
+                            if room == "Double" and int(noOfGuests) > 1:
+                                doubleIncrease = standardRoomData[1] * 0.1
+                            else:
+                                doubleIncrease = 0
+                            fare = doubleIncrease
+                            fare = doubleIncrease +((int(row[5]) * int(totalNights.days)))
                             fare = fare * discount
                             peakStatus = False
                         data.append(fare)
                         datarows.append(data)
                     dbcursor.close()
                     conn.close()
-
+                    
                     return render_template('Booking/book.html', bookingSet=datarows, lookup=lookup, status=peakStatus)
 
                 else:
@@ -343,7 +358,7 @@ def booking():
 
         else:
             login = False
-            return redirect(url_for('myAccount', login=login))
+            return redirect(url_for('noAccount', login=login))
     # process args
 
     else:
