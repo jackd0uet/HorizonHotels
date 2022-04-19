@@ -46,7 +46,31 @@
           
         </tr>
               <input type="hidden" name="address" value="{{bookingSet[0][3]}}">
-              <input type="hidden" name="totalFare" value="{{bookingSet[0][7]}}">
+
+        <tr>
+          <th>Currency</th>
+          <th>Price</th>
+          <th>Select</th>
+        </tr>
+        <tr>
+          <td>Pounds</td>
+          <td>{{bookingSet[0][7]}}</td>
+          <td><input type="radio" name="paymentType" value="Pounds" checked></td>
+          <input type="hidden" name="totalFarePounds" value="{{bookingSet[0][7]}}">  
+        </tr>
+        <tr>
+          <td>Euros</td>
+          <td>{{bookingSet[0][8]}}</td>
+          <td><input type="radio" name="paymentType" value="Euros"></td>
+          <input type="hidden" name="totalFareEuros" value="{{bookingSet[0][8]}}"> 
+        </tr>
+        <tr>
+          <td>Dollars</td>
+          <td>{{bookingSet[0][9]}}</td>
+          <td><input type="radio" name="paymentType" value="Dollars"></td>
+          <input type="hidden" name="totalFareDollars" value="{{bookingSet[0][9]}}">
+        </tr>
+
       </table>
       <input type="submit" value="Confirm Booking!">
     </form>

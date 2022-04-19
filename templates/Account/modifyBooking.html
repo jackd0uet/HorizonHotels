@@ -1,61 +1,121 @@
-{% extends 'base.html' %}
-
-{% block header %}
-    <h1>{% block title %} Modify Booking {% endblock %}</h1>
-{% endblock %}
-
-{% block content %}
-
-<form action="/account/cancel_booking/" method="POST">
-    <input type="hidden" name="bookingId" id="bookingId" value="{{bookingInfo[0]}}">
-    <input type="hidden" name="customerId" id="customerId" value="{{bookingInfo[1]}}">
-    <input type="hidden" name="roomId" id="roomId" value="{{bookingInfo[2]}}">
-    <input type="hidden" name="dateBooked" id="dateBooked" value="{{bookingInfo[3]}}">
-    <input type="hidden" name="startDate" id="startDate" value="{{bookingInfo[4]}}">
-    <input type="hidden" name="endDate" id="endDate" value="{{bookingInfo[5]}}">
-    <input type="hidden" name="guests" id="guests" value="{{bookingInfo[6]}}">
-    <input type="hidden" name="totalPaid" id="totalPaid" value="{{bookingInfo[7]}}">
-    <table>
+{% extends 'base.html' %} {% block header %}
+<h1 class="centre">{% block title %} Modify Booking {% endblock %}</h1>
+{% endblock %} {% block content %}
+<div class="row centre">
+  <div class="col-1 col-s-1"></div>
+  <div class="col-10 col-s-10">
+    <form action="/account/cancel_booking/" method="POST">
+      <input
+        type="hidden"
+        name="bookingId"
+        id="bookingId"
+        value="{{bookingInfo[0]}}"
+      />
+      <input
+        type="hidden"
+        name="customerId"
+        id="customerId"
+        value="{{bookingInfo[1]}}"
+      />
+      <input
+        type="hidden"
+        name="roomId"
+        id="roomId"
+        value="{{bookingInfo[2]}}"
+      />
+      <input
+        type="hidden"
+        name="dateBooked"
+        id="dateBooked"
+        value="{{bookingInfo[3]}}"
+      />
+      <input
+        type="hidden"
+        name="startDate"
+        id="startDate"
+        value="{{bookingInfo[4]}}"
+      />
+      <input
+        type="hidden"
+        name="endDate"
+        id="endDate"
+        value="{{bookingInfo[5]}}"
+      />
+      <input
+        type="hidden"
+        name="guests"
+        id="guests"
+        value="{{bookingInfo[6]}}"
+      />
+      <input
+        type="hidden"
+        name="totalPaid"
+        id="totalPaid"
+        value="{{bookingInfo[7]}}"
+      />
+      <table class="centre">
         <tr>
-            <th>Booking ID</th>
-            <th>Room ID</th>
-            <th>Date Booked</th>
-            <th>Start Date</th>
-            <th>End Date</th>
-            <th>Guests</th>
-            <th>Total Paid</th>
+          <th>Booking ID</th>
+          <th>Room ID</th>
+          <th>Date Booked</th>
+          <th>Start Date</th>
+          <th>End Date</th>
+          <th>Guests</th>
+          <th>Total Paid</th>
         </tr>
         <tr>
-            <th>{{bookingInfo[0]}}</th>
-            <th>{{bookingInfo[2]}}</th>
-            <th>{{bookingInfo[3]}}</th>
-            <th>{{bookingInfo[4]}}</th>
-            <th>{{bookingInfo[5]}}</th>
-            <th>{{bookingInfo[6]}}</th>
-            <th>{{bookingInfo[7]}}</th>
+          <th>{{bookingInfo[0]}}</th>
+          <th>{{bookingInfo[2]}}</th>
+          <th>{{bookingInfo[3]}}</th>
+          <th>{{bookingInfo[4]}}</th>
+          <th>{{bookingInfo[5]}}</th>
+          <th>{{bookingInfo[6]}}</th>
+          <th>{{bookingInfo[7]}}</th>
         </tr>
-    </table>
+      </table>
 
-    <h2>Cancel your booking</h2>
-    <p>If you would like to cancel your booking with us, some charges might apply.</p>
+      <h2>Cancel your booking</h2>
+      <p>
+        If you would like to cancel your booking with us, some charges might
+        apply.
+      </p>
 
-    <p>If you cancel more than 60 days before your booking start date, no charge will be necessary.</p>
-    <p>Booking cancellations between 30 and 60 days of booking start date will incur charges of 50% of booking price.</p>
-    <p>Booking cancellations less than 30 days before the start of the booking will incur an 100% charge. </p>
+      <p>
+        If you cancel more than 60 days before your booking start date, no
+        charge will be necessary. Booking cancellations between 30 and 60 days
+        of booking start date will incur charges of 50% of booking price.
+        Booking cancellations less than 30 days before the start of the booking
+        will incur an 100% charge.
+      </p>
 
-
-    {% if daysLeft > 60: %}
-        <h4>You have {{daysLeft}} days until your booking, you will receive a full refund if you would like to cancel.</h4>
-        <input type="hidden" name="Cancel" id="Cancel" value="61">
-    {% elif daysLeft <= 60 and daysLeft > 30: %}
-        <h4>You have {{daysLeft}} days until your booking, you will receive a 50% refund if you would like to cancel.</h4>
-        <input type="hidden" name="Cancel" id="Cancel" value="45">
-    {% else: %}
-        <h4>You have {{daysLeft}} days until your booking, you will not receive a refund if you would like to cancel.</h4>
-        <input type="hidden" name="Cancel" id="Cancel" value="0">
-    {% endif %}
-    <input type="submit" name="cancelSubmit" id="cancelSubmit" value="Cancel Booking!">
-</form>
-
+      {% if daysLeft > 60: %}
+      <h4>
+        You have {{daysLeft}} days until your booking, you will receive a full
+        refund if you would like to cancel.
+      </h4>
+      <input type="hidden" name="Cancel" id="Cancel" value="61" />
+      {% elif daysLeft <= 60 and daysLeft > 30: %}
+      <h4>
+        You have {{daysLeft}} days until your booking, you will receive a 50%
+        refund if you would like to cancel.
+      </h4>
+      <input type="hidden" name="Cancel" id="Cancel" value="45" />
+      {% else: %}
+      <h4>
+        You have {{daysLeft}} days until your booking, you will not receive a
+        refund if you would like to cancel.
+      </h4>
+      <input type="hidden" name="Cancel" id="Cancel" value="0" />
+      {% endif %}
+      <input
+        type="submit"
+        name="cancelSubmit"
+        id="cancelSubmit"
+        value="Cancel Booking!"
+      />
+    </form>
+    <div class="col-1 col-s-1"></div>
+  </div>
+</div>
 
 {% endblock %}

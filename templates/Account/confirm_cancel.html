@@ -1,16 +1,32 @@
-{% extends 'base.html' %}
+{% extends 'base.html' %} {% block header %}
+<h1 class="centre">
+  {% block title %} Your booking has been cancelled! {% endblock %}
+</h1>
+{% endblock %} {% block content %}
+<div class="row centre">
+  <div class="col-1 col-s-1"></div>
+  <div class="col-10 col-s-10">
+    <h4>You have successfully cancelled your booking!</h4>
+    <p>Your booking reference is: {{bookId}}</p>
+    <p>You have been refunded: £{{refund}}</p>
+    <h5>
+      You will still be able to find details of this booking in your MyAccount
+      page.
+    </h5>
+    <div class="col-1 col-s-1"></div>
+  </div>
+</div>
+<div class="row centre">
+  <div class="col-5 col-s-5"></div>
 
-{% block header %}
-    <h1>{% block title %} Your booking has been cancelled! {% endblock %}</h1>
-{% endblock %}
-
-{% block content %}
-
-<h4>You have successfully cancelled your booking!</h4>
-<p>Your booking reference is: {{bookId}}</p>
-<p>You have been refunded: £{{refund}}</p>
-<h5>You will still be able to find details of this booking in your MyAccount page.</h5>
-<p><a href="{{ url_for('account') }}">Return to your Account!</a></p>
-
+  <div class="col-2 col-s-2 menu">
+    <ul>
+      <li>
+        <a href="{{ url_for('account') }}"><h2>My Account</h2></a>
+      </li>
+    </ul>
+  </div>
+  <div class="col-5 col-s-5"></div>
+</div>
 
 {% endblock %}

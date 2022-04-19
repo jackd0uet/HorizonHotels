@@ -345,7 +345,14 @@ def booking():
                             fare = doubleIncrease +((int(row[5]) * int(totalNights.days)))
                             fare = fare * discount
                             peakStatus = False
+
+                        fareEuros = fare * 1.2
+                        fareUSD = fare * 1.6
+                        
                         data.append(fare)
+                        data.append(fareEuros)
+                        data.append(fareUSD)
+
                         datarows.append(data)
                     dbcursor.close()
                     conn.close()
@@ -375,13 +382,25 @@ def booking_confirm():
         checkIn = request.form['start']
         checkOut = request.form['end']
         guests = request.form['guests']
-        totalFare = request.form['totalFare']
         address = request.form['address']
+    
         nights = datetime.strptime(
             checkOut, '%Y-%m-%d') - datetime.strptime(checkIn, '%Y-%m-%d')
 
+        
+        
+        currencyChoice = request.form["paymentType"]
+        print(currencyChoice)
+
+        if currencyChoice == "Pounds":
+            totalFare = request.form["totalFarePounds"]
+        elif currencyChoice == "Euros":
+            totalFare = request.form["totalFareEuros"]
+        elif currencyChoice == "Dollars":
+            totalFare = request.form["totalFareDollars"]
+
         bookingData = [choice, room, confCity, address,
-                       checkIn, checkOut, guests, totalFare, nights.days]
+                       checkIn, checkOut, guests, totalFare, nights.days, currencyChoice]
         todaysDate = date.today()
 
         conn = dbfunc.getConnection()
@@ -394,8 +413,8 @@ def booking_confirm():
             loggedInCustomerId = dbcursor.fetchall()
             loggedInCustomerId = loggedInCustomerId[0][0]
 
-            dbcursor.execute('INSERT INTO bookings (customerId, roomId, dateBooked, startDate, endDate, guests, totalFare) VALUES \
-                (%s, %s, %s, %s, %s, %s, %s);', (loggedInCustomerId, choice, todaysDate, checkIn, checkOut, guests, totalFare))
+            dbcursor.execute('INSERT INTO bookings (customerId, roomId, dateBooked, startDate, endDate, guests, totalFare, currency) VALUES \
+                (%s, %s, %s, %s, %s, %s, %s, %s);', (loggedInCustomerId, choice, todaysDate, checkIn, checkOut, guests, totalFare, currencyChoice))
             print('Booking statement executed successfully.')
             conn.commit()
 

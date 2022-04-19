@@ -1,8 +1,53 @@
-<html>
+{% extends 'base.html' %} {% block header %} {% endblock %} {% block content %}
 
+<div class="row centre">
+  <div class="col-1 col-s-1"></div>
+  <div class="col-10 col-s-10">
+    <h1>Thank you for booking with Horizon Hotels!</h1>
+    <h3>
+      We look forward to having you stay with us, all the details for your
+      booking are below.
+    </h3>
+    <table class="centre">
+      <tr>
+        <th>Room Number</th>
+        <th>Room Type</th>
+        <th>City</th>
+        <th>Address of Hotel</th>
+        <th>Start Date</th>
+        <th>End Date</th>
+        <th>Price</th>
+        <th></th>
+      </tr>
+      <tr>
+        <td>{{resultset[0]}}</td>
+        <td>{{resultset[1]}}</td>
+        <td>{{resultset[2]}}</td>
+        <td>{{resultset[3]}}</td>
+        <td>{{resultset[4]}}</td>
+        <td>{{resultset[5]}}</td>
+        <td>{{resultset[7]}}</td>
+        <td>{{resultset[9]}}</td>
+      </tr>
+    </table>
+    
+    <h4>
+      You can view or amend your booking by going to your account page or by
+      pressing the button below.
+    </h4>
+  </div>
+  <div class="col-1 col-s-1"></div>
+</div>
+<div class="row centre">
+  <div class="col-5 col-s-5"></div>
+  <div class="col-2 col-s-2 menu">
+    <ul>
+      <li>
+        <a href="{{ url_for('account') }}"><h2>My Account</h2></a>
+      </li>
+    </ul>
+  </div>
+  <div class="col-5 col-s-5"></div>
+</div>
 
-    {% for num in resultset %}
-        {{num}}
-
-    {% endfor %}
-</html>
+{% endblock %}

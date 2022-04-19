@@ -11,10 +11,10 @@
   }
 </script>
 
-<nav>
+<nav class="centre">
 <ul>
   {% if "logged_in" in session: %}
-      <li><h2>{{session['name']}}, what can we do for you today?</h2></li>
+      <li><h2>Hello {{session['name']}}! What can we do for you today?</h2></li>
       <li><span></li><a href="{{  url_for('index') }}"></a
       ><button class="navbarButtons" onclick="window.location.href='logout';">Log out</button></span>
   {% else %}
@@ -29,57 +29,26 @@
       window.onload = logoutFunc();
   </script>
 {% endif %}
-
-<h2>My Bookings:</h1>
-<form action="/account/modify_booking/" method="POST">
-<table>
-  <tr>
-    <th>Booking ID</th>
-    <th>Room Id</th>
-    <th>Date Booked</th>
-    <th>Start of Booking</th>
-    <th>End of Booking</th>
-    <th>Total Guests</th>
-    <th>Amount Paid</th>
-    <th>Room Type</th>
-    <th>City</th>
-    <th>Address</th>
-  </tr>
-
-{% for row in bookingData %}
-  <tr>
-    <td>{{row[0]}}</td>
-    <td>{{row[2]}}</td>
-    <td>{{row[3]}}</td>
-    <td>{{row[4]}}</td>
-    <td>{{row[5]}}</td>
-    <td>{{row[6]}}</td>
-    <td>{{row[7]}}</td>
-    <td>{{row[8]}}</td>
-    <td>{{row[9]}}</td>
-    <td>{{row[10]}}</td>
-    <td><input type="radio" name="modifyBooking" id="modifyBooking" value="{{row[0]}}" checked></td>
-  </tr>  
-{% endfor %}
-</table>
-<input type="submit" value="Edit Selected booking!">
-</form>
-
-{% if count > 0: %}
-  <h2>Cancelled Bookings:</h2>
+<div class="row centre">
+  <div class="col-1 col-s-1"></div>
+  <div class="col-10 col-s-10">   
+  <h2>My Bookings:</h2>
+  <form action="/account/modify_booking/" method="POST">
   <table>
-    <tr>
+    <tr>    
       <th>Booking ID</th>
-      <th>Room ID</th>
+      <th>Room Id</th>
       <th>Date Booked</th>
-      <th>Start Date</th>
-      <th>End Date</th>
-      <th>Date Cancelled</th>
-      <th>Guests</th>
-      <th>Total Paid</th>
-      <th>Total Refunded</th>
+      <th>Start of Booking</th>
+      <th>End of Booking</th>
+      <th>Total Guests</th>
+      <th>Amount Paid</th>
+      <th>Room Type</th>
+      <th>City</th>
+      <th>Address</th>
     </tr>
-    {% for row in cancelledData %}
+
+  {% for row in bookingData %}
     <tr>
       <td>{{row[0]}}</td>
       <td>{{row[2]}}</td>
@@ -91,10 +60,48 @@
       <td>{{row[8]}}</td>
       <td>{{row[9]}}</td>
       <td>{{row[10]}}</td>
-    </tr>
-    {% endfor %}
+      <td><input type="radio" name="modifyBooking" id="modifyBooking" value="{{row[0]}}" checked></td>
+    </tr>  
+  {% endfor %}
   </table>
-{% endif %}
+  <input type="submit" value="Edit Selected booking!">
+  </form>
+
+  {% if count > 0: %}
+    <h2>Cancelled Bookings:</h2>
+    <table>
+      <tr>
+        <th>Booking ID</th>
+        <th>Room ID</th>
+        <th>Date Booked</th>
+        <th>Start Date</th>
+        <th>End Date</th>
+        <th>Date Cancelled</th>
+        <th>Guests</th>
+        <th>Total Paid</th>
+        <th>Total Refunded</th>
+      </tr>
+      {% for row in cancelledData %}
+      <tr>
+        <td>{{row[0]}}</td>
+        <td>{{row[2]}}</td>
+        <td>{{row[3]}}</td>
+        <td>{{row[4]}}</td>
+        <td>{{row[5]}}</td>
+        <td>{{row[6]}}</td>
+        <td>{{row[7]}}</td>
+        <td>{{row[8]}}</td>
+        <td>{{row[9]}}</td>
+        <td>{{row[10]}}</td>
+      </tr>
+      {% endfor %}
+    </table>
+  {% endif %}
+
+</div>
+<div class="col-1 col-s-1"></div>
+</div>
+
 
 
 {% endblock %}
