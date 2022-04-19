@@ -48,7 +48,6 @@ def myAccount():
                 for row in rows:
                     data = list(row)
                     datarows.append(data)
-                print(datarows)
 
                 dbcursor.execute("SELECT * FROM cancelledBookings WHERE customerId = %s", (session.get('userId'), ))
                 rowsTwo = dbcursor.fetchall()
@@ -57,7 +56,6 @@ def myAccount():
                 for row in rowsTwo:
                     dataTwo = list(row)
                     dataRowsTwo.append(dataTwo)
-                print(dataRowsTwo)
                 
                 dbcursor.execute("SELECT COUNT(*) FROM cancelledBookings WHERE customerId = %s", (session.get('userId'), ))
                 cancelledCount = dbcursor.fetchone()[0]
@@ -88,7 +86,6 @@ def modify():
             for row in rows:
                 data = list(row)
                 datarows.append(data)
-            print(datarows)
             dbcursor.close()
             conn.close()
 
@@ -149,11 +146,16 @@ def noAccount():
 @app.route('/account/')
 def account():
     if session.get('logged_in') == True:
-        return redirect(url_for('myAccount'))
+        if session.get('userType') == "ADMIN":
+            return redirect(url_for('adminHub'))
+        else:
+            return redirect(url_for('myAccount'))
     else:
         return redirect(url_for('noAccount'))
 
-
+@app.route('/account/adminHub/')
+def adminHub():
+    return render_template('Account/admin.html')
 
 @app.route('/account/signup/')
 def signup():
@@ -227,7 +229,6 @@ def login():
                 dbcursor.execute("SELECT password FROM customer WHERE email = %s;",
                                  (email,))
                 data = dbcursor.fetchone()
-                print(data[0])
 
                 if dbcursor.rowcount < 1:
                     error = "Email or password is incorrect, please try again."
@@ -240,17 +241,19 @@ def login():
                             print("CONNECTED TO HH_DB!")
                             dbcursor = conn.cursor()
                             dbcursor.execute(
-                                "SELECT fName, lName, customerId FROM customer WHERE email = %s;", (email, ))
+                                "SELECT fName, lName, customerId, userType FROM customer WHERE email = %s;", (email, ))
                             data = dbcursor.fetchall()
+                            data = data[0]
                             dbcursor.close()
                             conn.close()
 
                             session['logged_in'] = True
                             session['email'] = request.form['email']
-                            session['name'] = data[0][0] + " " + data[0][1]
-                            session['userId'] = data[0][2]
+                            session['name'] = data[0] + " " + data[1]
+                            session['userId'] = data[2]
+                            session['userType'] = data[3]
                             print('You are now logged in!')
-                            return redirect(url_for('myAccount'))
+                            return redirect(url_for('account'))
                     else:
                         error = "Invalid credentials, please try again"
 
