@@ -1,48 +1,87 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <title>Horizon Holidays - Sign-Up</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" type='text/css' href="{{ url_for('static', filename='styles/main.css') }}" />
-  </head>
+{% extends 'base.html' %} {% block header %} {% endblock %} {% block title %}
+Sign up {% endblock %} {% block content %}
 
-  <body>
-    <div class="header">
-      <a href="{{ url_for('index') }}"><h1>Horizon Holidays</h1></a>
-      <h2>Sign-Up</h2>
-    </div>
+<div class="row centre"></div>
+<div class="col-1 col-s-1"></div>
 
-    <div class="col-3"></div>
+<div class="col-10 col-s-10 aside">
+  <form class="form" id="signup" action="/sign-up/" method="POST">
+    <div class="container">
+      <label for="fname">First Name: </label>
+      <input
+        type="text"
+        name="fname"
+        id="fname"
+        class="form"
+        placeholder="Enter first name..."
+      />
+      <br />
 
-    <div class="col-6 aside">
-      <form class="signup" id="signup" action="/sign-up/" method="POST">
-        <label for="fname">First Name: </label>
-        <input type="text" name="fname" id="fname" class="signup">
-        <br />
-        <label for="lname">Last Name: </label>
-        <input type="text" name="lname" id="lname" class="signup">
-        <br />
-        <label for="dob">Date of Birth: </label>
-        <input type="date" name="dob" id="dob" class="signup">
-        <br />
-        <label for="postcode">Postcode: </label>
-        <input type="text" name="postcode" id="postcode" class="postcode">
-        <br />
-        <label for="email">Email Address: </label>
-        <input type="email" name="email" id="email" class="signup" />
-        <br />
-        <label for="password">Password: </label>
-        <input type="password" name="password" id="password" class="signup" />
-        <br />
-        <label for="confpassword">Confirm Password: </label>
-        <input type="confpassword" name="confpassword" id="confpassword" class="signup" />
-        <br />
-        <button form="signup" value="submit">Sign-Up</button>
-      </form>
+      <label for="lname">Last Name: </label>
+      <input
+        type="text"
+        name="lname"
+        id="lname"
+        class="form"
+        placeholder="Enter last name..."
+      />
+      <br />
+
+      <label for="dob">Date of Birth: </label>
+      <input
+        type="date"
+        name="dob"
+        id="dob"
+        class="form"
+        placeholder="01/01/2000"
+      />
+      <br />
+
+      <label for="postcode">Postcode: </label>
+      <input
+        type="text"
+        name="postcode"
+        id="postcode"
+        class="form"
+        placeholder="Enter post code..."
+      />
+      <br />
+
+      <label for="email">Email Address: </label>
+      <input
+        type="email"
+        name="email"
+        id="email"
+        class="form"
+        placeholder="example@example.com"
+      />
+      <br />
+
+      <label for="password">Password: </label>
+      <input
+        type="password"
+        name="password"
+        id="password"
+        class="form"
+        placeholder="Enter password..."
+      />
+      <br />
+
+      <label for="confpassword">Confirm Password: </label>
+      <input
+        type="password"
+        name="confpassword"
+        id="confpassword"
+        class="form"
+        placeholder="Confirm password..."
+      />
+      <br />
+      <div class="clearfix">
+        <button type="button" onclick="window.location.href='{{ url_for('index') }}';" class="cancelBtn">Cancel</button>
+        <button form="signup" class="signUpBtn" value="submit">Sign Up</button>
+      </div>
     </div>
-    <div class="col-3"></div>
-    <div class="footer">
-      <a href="{{ url_for('privacy') }}">Privacy Statement</a>
-    </div>
-  </body>
-</html>
+  </form>
+</div>
+<div class="col-1 col-s-1"></div>
+{% endblock %}
