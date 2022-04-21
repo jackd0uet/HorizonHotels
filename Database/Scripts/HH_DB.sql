@@ -89,8 +89,6 @@ DELETE FROM hotel WHERE roomId > 64;
     
 SELECT COUNT(*) FROM hotel WHERE roomId =1;
 
-INSERT INTO customer(fName, lName, dob, postcode, email, password) VALUES ('Jack', 'Douet', '2000-06-26', 'HR4 0LQ', '$5$rounds=535000$U6FYfJET8c4nTmlS$bhzltrdAj6WgRY1fggV0p5MVOfNfWZZQa7yWT79ygs2';
-
 SELECT * FROM customer;
 SELECT * FROM bookings;
 select * from hotel;
@@ -169,3 +167,25 @@ UPDATE hotel SET fare = fare * 1.2 WHERE roomType = "Double";
 
 UPDATE hotel SET offPeakFare = offPeakFare * 1.2 WHERE roomType = "Double";
 
+ALTER TABLE hotel
+ADD COLUMN maxOccupancy INT NOT NULL DEFAULT 1;
+
+UPDATE hotel SET maxOccupancy = 6 WHERE roomType = "Family";
+
+SELECT * FROM bookings;
+DELETE FROM bookings WHERE bookingId = 19;
+SELECT * FROM hotel;
+SELECT fare, offPeakFare from hotel where roomType = "Standard" and hotelCity = "Aberdeen";
+
+ALTER TABLE bookings
+ADD COLUMN currency VARCHAR(20) NOT NULL DEFAULT "Pounds";
+
+SELECT * FROM customer;
+
+UPDATE customer SET userType = "ADMIN" WHERE customerId = 6;
+
+SELECT * FROM hotel;
+
+SELECT DISTINCT hotelCity from hotel;
+
+SELECT DISTINCT hotelCity FROM hotel WHERE NOT EXISTS (SELECT * FROM bookings WHERE bookings.roomId = hotel.roomId and bookings.startDate = '01.01.2000' and bookings.endDate = '02.01.2000') and hotelCity = 'Aberdeen' and roomType = 'Standard';

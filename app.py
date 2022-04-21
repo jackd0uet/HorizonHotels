@@ -155,7 +155,43 @@ def account():
 
 @app.route('/account/adminHub/')
 def adminHub():
-    return render_template('Account/admin.html')
+    conn = dbfunc.getConnection()
+
+    if conn != None:
+        print("CONNECTED TO DATABASE: HH_DB")
+        dbcursor = conn.cursor()
+
+        dbcursor.execute("SELECT DISTINCT hotelCity FROM hotel;")
+        cities = dbcursor.fetchall()
+        data = []
+        for city in cities:
+            data.append(city)
+
+    return render_template('Account/admin.html', citiesData=data,)
+
+@app.route('/check-bookings/', methods=['POST', 'GET'])
+def check_bookings():
+    error = ''
+    if request.method == 'POST':
+        startDate = request.form['startDate']
+        endDate = request.form['endDate']
+        city = request.form['hotel']
+
+        conn = dbfunc.getConnection()
+
+        if conn != None:
+            print("CONNECTED TO DATABASE: HH_DB")
+            dbcursor = conn.cursor()
+
+            dbcursor.execute("SELECT * FROM fullbookinginfo WHERE hotelCity = %s AND startDate BETWEEN %s AND %s;", (city, startDate, endDate ))
+            rows = dbcursor.fetchall()
+            datarows = []
+            for row in rows:
+                data = list(row)
+                datarows.append(data)
+
+
+    return render_template('Account/check_bookings.html', bookingData=datarows)
 
 @app.route('/account/signup/')
 def signup():

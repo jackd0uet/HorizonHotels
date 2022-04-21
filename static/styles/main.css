@@ -96,6 +96,7 @@ button {
   text-align: center;
   padding: 15px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+  margin: 5px;
 }
 
 .navbar{
@@ -219,7 +220,7 @@ input[type="submit"] {
   margin: 10px;
 }
 
-.form input[type=text], input[type=password], input[type=date], input[type=email]{
+.form input[type=text], input[type=password], input[type=date], input[type=email], select{
   width: 100%;
   padding: 15px;
   margin: 5px 0 22px 0;
@@ -228,7 +229,7 @@ input[type="submit"] {
   background-color: #f1f1f1;
 }
 
-.form input[type=text]:focus, input[type=password]:focus, input[type=date]:focus, input[type=email]:focus {
+.form input[type=text]:focus, input[type=password]:focus, input[type=date]:focus, input[type=email]:focus, select:focus {
   background-color: #ddd;
   outline: none;
 }
