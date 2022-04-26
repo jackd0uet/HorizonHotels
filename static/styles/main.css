@@ -286,8 +286,8 @@ input[type="submit"] {
 }
 
 .img_container img {
-  width: auto;
-  height: auto;
+  width: 70%;
+  height: 40%;
 }
 
 .img_container .btn {
