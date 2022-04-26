@@ -105,7 +105,7 @@ select b.bookingId, b.customerId, b.roomId, b.dateBooked, b.startDate, b.endDate
     on b.roomId = h.roomId;
 
 drop view FULLBOOKINGINFO;
-CREATE VIEW FULLBOOKINGINFO as select b.bookingId, b.customerId, b.roomId, b.dateBooked, b.startDate, b.endDate, b.guests, b.totalFare,
+CREATE VIEW FULLBOOKINGINFO as select b.bookingId, b.customerId, b.roomId, b.dateBooked, b.startDate, b.endDate, b.guests, b.totalFare, b.currency,
 	h.roomType, h.hotelCity, h.address
     from bookings b
     join hotel h
@@ -189,3 +189,10 @@ SELECT * FROM hotel;
 SELECT DISTINCT hotelCity from hotel;
 
 SELECT DISTINCT hotelCity FROM hotel WHERE NOT EXISTS (SELECT * FROM bookings WHERE bookings.roomId = hotel.roomId and bookings.startDate = '01.01.2000' and bookings.endDate = '02.01.2000') and hotelCity = 'Aberdeen' and roomType = 'Standard';
+SELECT * FROM fullbookinginfo;
+
+drop view fullbookinginfo;
+
+SELECT * FROM fullbookinginfo WHERE hotelCity = 'Aberdeen' AND startDate BETWEEN '2022-04-19' AND '2022-05-01';
+
+SELECT COUNT(*) FROM hotel WHERE hotelCity = 'Aberdeen';

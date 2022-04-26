@@ -94,9 +94,9 @@ button {
   background-color: #3891a6;
   color: white;
   text-align: center;
-  padding: 15px;
+  padding: 5px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
-  margin: 5px;
+  margin: 0;
 }
 
 .navbar{
@@ -138,8 +138,9 @@ button {
   padding: 17px;
   bottom: 0;
   width: 100%;
-  position: fixed;
+  position:relative;
   left: 0;
+  margin: 10px 0 0 0;
   
 }
 
@@ -277,4 +278,49 @@ input[type="submit"] {
   .form .cancelBtn, .signUpBtn, .loginBtn {
     width: 100%;
   }
+}
+
+.img_container {
+  position: relative;
+  width: 100%;
+}
+
+.img_container img {
+  width: auto;
+  height: auto;
+}
+
+.img_container .btn {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  background-color: #555;
+  color: white;
+  font-size: 16px;
+  padding: 12px 24px;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+  width: 20%;
+}
+
+.img_container .btn:hover {
+  background-color: black;
+}
+
+li button {
+  background-color: #04AA6D;
+  color: white;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  cursor: pointer;
+  opacity: 0.9;
+  width: 45%;
+}
+
+li button:hover {
+  opacity: 1;
 }

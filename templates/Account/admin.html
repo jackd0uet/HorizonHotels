@@ -12,7 +12,7 @@ Admin Hub{% endblock %} {% block content %}
       {% if "logged_in" in session: %}
           <li><h2>Hello {{session['name']}}! What can we do for you today?</h2></li>
           <li><span></li><a href="{{  url_for('index') }}"></a
-          ><button class="navbarButtons" onclick="window.location.href='logout';">Log out</button></span>
+          ><button class="navbarButtons" onclick="window.location.href='{{ url_for('logout') }}';">Log out</button></span>
       {% else %}
           <li class="navbar"><span><button class="navbarButtons" onclick="window.location.href='login';">Log In</button></span></li>
           <li class="navbar"><span><button class="navbarButtons" onclick="window.location.href='signup';">Sign Up</button></span></li>

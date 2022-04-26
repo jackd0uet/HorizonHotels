@@ -1,110 +1,147 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <title>Our Cities</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" type='text/css' href="{{ url_for('static', filename='styles/main.css') }}" />
-  </head>
-  <body>
-    <div class="header">
-      <h1><a href="{{ url_for('index') }}">Horizon Holidays</a></h1>
-      <h2>Our Cities</h2>
-    </div>
-    <div class="col-3 aside">
-      <a href="{{ url_for('aberdeen') }}">
-        <img src="/static/img/cities/Aberdeen.jpeg" alt="Aberdeen" />
-        Aberdeen</a
-      >
-    </div>
-    <div class="col-3 aside">
-      <a href="{{ url_for('belfast') }}">
-        <img src="/static/img/cities/Belfast.jpeg" alt="Belfast" />
-        Belfast</a
-      >
-    </div>
-    <div class="col-3 aside">
-      <a href="{{ url_for('birmingham') }}">
-        <img src="/static/img/cities/Birmingham.jpeg" alt="Birmingham" />
-        Birmingham</a
-      >
-    </div>
-    <div class="col-3 aside">
+{% extends 'base.html' %} {% block header %} {% endblock %} {% block title %}
+Our Cities{% endblock %} {% block content %}
+
+<nav class="centre">
+  <ul class="aside">
+    <li><h2>Our Cities</h2></li>
+    {% if date == False: %}
+      <li><h3>When would you like to stay with us?</h3></li>
+      <li>
+          <form class="form" id="ourCities" action="/our_cities_date_form/" method="POST">
+              <div class="container">
+                  <label for="sDate">Start Date: </label>
+                  <input type="date" name="sDate" id="sDate" class="form">
+                  <br>
+                  <label for="eDate">End Date: </label>
+                  <input type="date" name="eDate" id="eDate" class="form">
+                  <br>
+                  <div class="clearfix">
+                      <button form="ourCities" class="form" value="submit">Search availability </button>
+                  </div>
+              </div>
+          </form>
+      </li>
+    {% elif date: %}
+      <li><h3>Your selected dates are: {{startDate}} to {{endDate}}</h3></li>
+      <li>
+        <div class="container clearfix">
+          <button type="button" onclick="window.location.href='{{ url_for('ourCities') }}';">Edit Dates</button>
+        </div>
+      </li>
+    {% endif %}
+  </ul>
+</nav>
+
+<div class="row centre">
+  {% if ('Aberdeen',) in cities and availability[0] == 1: %}
+  <div class="col-4 col-s-4 aside">
+    <a href="{{ url_for('aberdeen') }}">
+      <img src="/static/img/cities/Aberdeen.jpeg" alt="Aberdeen" />
+      Aberdeen</a
+    >
+  </div>
+  {% endif %} {% if ('Belfast',) in cities and availability[1] == 1: %}
+  <div class="col-4 col-s-4 aside">
+    <a href="{{ url_for('belfast') }}">
+      <img src="/static/img/cities/Belfast.jpeg" alt="Belfast" />
+      Belfast</a
+    >
+  </div>
+  {% endif %} {% if ('Birmingham',) in cities and availability[2] == 1:  %}
+  <div class="col-4 col-s-4 aside">
+    <a href="{{ url_for('birmingham') }}">
+      <img src="/static/img/cities/Birmingham.jpeg" alt="Birmingham" />
+      Birmingham</a
+    >
+  </div>
+  {% endif %} {% if ('Bristol',) in cities and availability[3] == 1:  %}
+  <div class="col-4 col-s-4 aside">
+    <a href="{{ url_for('bristol') }}">
       <img src="/static/img/cities/Bristol.jpeg" alt="Bristol" />
-      <a href="{{ url_for('bristol') }}">Bristol</a>
-    </div>
-    <div class="col-3 aside">
-      <a href="{{ url_for('cardiff') }}">
-        <img src="/static/img/cities/Cardiff.jpeg" alt="Cardiff" />
-        Cardiff</a
-      >
-    </div>
-    <div class="col-3 aside">
-      <a href="{{ url_for('edinburgh') }}">
-        <img src="/static/img/cities/Edinburgh.jpeg" alt="Edinburgh" />
-        Edinburgh</a
-      >
-    </div>
-    <div class="col-3 aside">
-      <a href="{{ url_for('glasgow') }}">
-        <img src="/static/img/cities/Glasgow.jpeg" alt="Glasgow" />
-        Glasgow</a
-      >
-    </div>
-    <div class="col-3 aside">
-      <a href="{{ url_for('london') }}">
-        <img src="/static/img/cities/London.jpeg" alt="London" />
-        London</a
-      >
-    </div>
-    <div class="col-3 aside">
-      <a href="{{ url_for('manchester') }}">
-        <img src="/static/img/cities/Manchester.jpeg" alt="Manchester" />
-        Manchester</a
-      >
-    </div>
-    <div class="col-3 aside">
-      <a href="{{ url_for('newcastle') }}l">
-        <img src="/static/img/cities/Newcastle.jpeg" alt="Newcastle" />
-        Newcastle</a
-      >
-    </div>
-    <div class="col-3 aside">
-      <a href="{{ url_for('norwich') }}">
-        <img src="/static/img/cities/Norwich.jpeg" alt="Norwich" />
-        Norwich</a
-      >
-    </div>
-    <div class="col-3 aside">
-      <a href="{{ url_for('nottingham') }}">
-        <img src="/static/img/cities/Nottingham.jpeg" alt="Nottingham" />
-        Nottingham</a
-      >
-    </div>
-    <div class="col-3 aside">
-      <a href="{{ url_for('oxford') }}">
-        <img src="/static/img/cities/Oxford.jpeg" alt="Oxford" />
-        Oxford</a
-      >
-    </div>
-    <div class="col-3 aside">
-      <a href="{{ url_for('plymouth') }}">
-        <img src="/static/img/cities/Plymouth.jpeg" alt="Plymouth" />
-        Plymouth</a
-      >
-    </div>
-    <div class="col-3 aside">
-      <a href="{{ url_for('swansea') }}">
-        <img src="/static/img/cities/Swansea.jpeg" alt="Swansea" />
-        Swansea</a
-      >
-    </div>
-    <div class="col-3 aside">
-      <a href="{{ url_for('contact') }}"
-        ><img src="/static/img/cities/no_city.png" alt="no city"> <!-- tried changing this to a static image and still does not fit, try a 800x800 image when next get time --></a
-      >
-    </div>
-    <div class="footer">
-      <a href="{{ url_for('privacy') }}">Privacy Statement</a>
-    </div>
-  </body>
-</html>
+      Bristol</a
+    >
+  </div>
+  {% endif %} {% if ('Cardiff',) in cities and availability[4] == 1:  %}
+  <div class="col-4 col-s-4 aside">
+    <a href="{{ url_for('cardiff') }}">
+      <img src="/static/img/cities/Cardiff.jpeg" alt="Cardiff" />
+      Cardiff</a
+    >
+  </div>
+  {% endif %} {% if ('Edinburgh',) in cities and availability[5] == 1:  %}
+  <div class="col-4 col-s-4 aside">
+    <a href="{{ url_for('edinburgh') }}">
+      <img src="/static/img/cities/Edinburgh.jpeg" alt="Edinburgh" />
+      Edinburgh</a
+    >
+  </div>
+  {% endif %} {% if ('Glasgow',) in cities and availability[6] == 1:  %}
+  <div class="col-4 col-s-4 aside">
+    <a href="{{ url_for('glasgow') }}">
+      <img src="/static/img/cities/Glasgow.jpeg" alt="Glasgow" />
+      Glasgow</a
+    >
+  </div>
+  {% endif %} {% if ('London',) in cities and availability[7] == 1:  %}
+  <div class="col-4 col-s-4 aside">
+    <a href="{{ url_for('london') }}">
+      <img src="/static/img/cities/London.jpeg" alt="London" />
+      London</a
+    >
+  </div>
+  {% endif %} {% if ('Manchester',) in cities and availability[8] == 1:  %}
+  <div class="col-4 col-s-4 aside">
+    <a href="{{ url_for('manchester') }}">
+      <img src="/static/img/cities/Manchester.jpeg" alt="Manchester" />
+      Manchester</a
+    >
+  </div>
+  {% endif %} {% if ('Newcastle',) in cities and availability[9] == 1:  %}
+  <div class="col-4 col-s-4 aside">
+    <a href="{{ url_for('newcastle') }}l">
+      <img src="/static/img/cities/Newcastle.jpeg" alt="Newcastle" />
+      Newcastle</a
+    >
+  </div>
+  {% endif %} {% if ('Norwich',) in cities and availability[10] == 1:  %}
+  <div class="col-4 col-s-4 aside">
+    <a href="{{ url_for('norwich') }}">
+      <img src="/static/img/cities/Norwich.jpeg" alt="Norwich" />
+      Norwich</a
+    >
+  </div>
+  {% endif %} {% if ('Nottingham',) in cities and availability[11] == 1:  %}
+  <div class="col-4 col-s-4 aside">
+    <a href="{{ url_for('nottingham') }}">
+      <img src="/static/img/cities/Nottingham.jpeg" alt="Nottingham" />
+      Nottingham</a
+    >
+  </div>
+  {% endif %} {% if ('Oxford',) in cities and availability[12] == 1:  %}
+  <div class="col-4 col-s-4 aside">
+    <a href="{{ url_for('oxford') }}">
+      <img src="/static/img/cities/Oxford.jpeg" alt="Oxford" />
+      Oxford</a
+    >
+  </div>
+  {% endif %} {% if ('Plymouth',) in cities and availability[13] == 1:  %}
+  <div class="col-4 col-s-4 aside">
+    <a href="{{ url_for('plymouth') }}">
+      <img src="/static/img/cities/Plymouth.jpeg" alt="Plymouth" />
+      Plymouth</a
+    >
+  </div>
+  {% endif %} {% if ('Swansea',) in cities and availability[14] == 1:  %}
+  <div class="col-4 col-s-4 aside">
+    <a href="{{ url_for('swansea') }}">
+      <img src="/static/img/cities/Swansea.jpeg" alt="Swansea" />
+      Swansea</a
+    >
+  </div>
+  {% endif %}
+
+
+</div>
+
+  {% endblock %}
+</div>
