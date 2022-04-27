@@ -1,0 +1,28 @@
+{% extends 'base.html' %} {% block header %} {% endblock %} {% block content %}
+
+<nav class="centre">
+    <ul class="aside">
+        {% if error == "email": %}
+            <li><h2>This email is already in use, please login or use another email.</h2></li>
+            <li class="navbar"><span><button class="navbarButtons" onclick="window.location.href='{{ url_for('login') }}';">Login</button></span></li>
+            <li class="navbar"><span><button class="navbarButtons" onclick="window.location.href='{{ url_for('sign_up') }}';">Sign up</button></span></li>
+        {% elif error == "conn": %}
+            <li><h2>A connection error has occurred, please alert the sites administrator.</h2></li>
+            <li class="navbar"><span><button class="navbarButtons" onclick="window.location.href='{{ url_for('index') }}';">Return to homepage</button></span></li>
+        {% elif error == "login": %}
+            <li><h2>Email or password is incorrect, please try again.</h2></li>
+            <li class="navbar"><span><button class="navbarButtons" onclick="window.location.href='{{ url_for('login') }}';">Login</button></span></li>
+        {% elif error == "overbooked": %}
+            <li><h2>Too many rooms booked on this time already, please select a different hotel, time or room type.</h2></li>
+            <li class="navbar"><span><button class="navbarButtons" onclick="window.location.href='{{ url_for('ourCities') }}';">Return to our cities page</button></span></li>
+
+        {% elif error == "notLogged": %}
+            <li><h2>Please login or signup before booking.</h2></li>
+            <li class="navbar"><span><button class="navbarButtons" onclick="window.location.href='{{ url_for('noAccount') }}';">Login/Signup</button></span></li>
+        {% endif %}
+        
+    </ul>
+    
+</nav>
+
+{% endblock %}

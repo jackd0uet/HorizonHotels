@@ -1,4 +1,10 @@
+# Horizon Hotels
+# app.py V1
+# Jack Douet
+
+# Import required modules
 from crypt import methods
+from distutils.log import error
 from pydoc import render_doc
 from tabnanny import check
 from flask import Flask, render_template, request, url_for, jsonify, redirect, session
@@ -13,60 +19,75 @@ import gc
 import hashlib
 
 
+# Setup flask app
 app = Flask(__name__)
 
+# Create secret key for password creation
 app.config.update(SECRET_KEY='osd(7:?[??jr??M7?H?')
 
 
-@app.route('/test/')
-def test():
-    return render_template('base.html')
-
-
+# Index route
 @app.route('/')
 def index():
     return render_template('index.html')
 
+# City selection route
+
 
 @app.route('/our_cities/')
 def ourCities():
+    # Connect to DB
     conn = dbfunc.getConnection()
 
+    # Check connection
     if conn != None:
         print("CONNECTED TO DATABASE: HH_DB")
         dbcursor = conn.cursor()
 
+        # Fetch all unique hotels and feed them into html template
         dbcursor.execute("SELECT DISTINCT hotelCity FROM hotel;")
         cities = dbcursor.fetchall()
         data = []
         for city in cities:
             data.append(city)
 
-    availability = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+         # Set availability defaults to True for all hotels so that they all will display on our cities page before date is selected.
+        availability = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
 
-    return render_template('Our_cities.html', cities=data, availability=availability, date = False)
+        return render_template('Our_cities.html', cities=data, availability=availability, date=False)
+    # Connection error handling.
+    else:
+        print("CANNOT CONNECT TO HH_DB")
+        error = "conn"
+        return render_template("error.html", error=error)
 
 
+# Cities pre booking form
 @app.route('/our_cities_form/', methods=['POST', 'GET'])
 def ourCitiesForm():
+    # Gather data from form if POST method
     if request.method == 'POST':
         start = request.form['sDate']
         end = request.form['eDate']
         guests = request.form['guests']
 
+        # Connect to HH_DB
         conn = dbfunc.getConnection()
         if conn != None:
             print("CONNECTED TO DATABASE: HH_DB")
             dbcursor = conn.cursor()
 
+            # Empty list for availability
             availability = []
 
+            # Fetch all unique hotels and feed them into html template
             dbcursor.execute("SELECT DISTINCT hotelCity FROM hotel;")
             cities = dbcursor.fetchall()
             data = []
             for city in cities:
                 data.append(city)
 
+            # Check all hotels booked rooms for selected date range and compare to amount of rooms at hotel.
             dbcursor.execute(
                 'SELECT COUNT(*) FROM hotel WHERE hotelCity = "Aberdeen" AND maxOccupancy <= %s;', (guests, ))
             aberdeenTotalRooms = dbcursor.fetchall()
@@ -77,6 +98,7 @@ def ourCitiesForm():
             aberdeenRoomsBooked = dbcursor.fetchall()
             aberdeenRoomsBooked = aberdeenRoomsBooked[0][0]
 
+            # For each hotel give 1 value for available else 0 for unavailable and put into availability list.
             if aberdeenTotalRooms > aberdeenRoomsBooked:
                 aberdeen = 1
             else:
@@ -322,27 +344,38 @@ def ourCitiesForm():
 
             availability.append(swansea)
 
+            # Close connections.
             dbcursor.close()
             conn.close()
+            print("DISCONNECTED FROM HH_DB!")
 
-            return render_template('Our_cities.html', cities=data, availability=availability, date = True, startDate = start, endDate = end, guests=guests)
+            return render_template('Our_cities.html', cities=data, availability=availability, date=True, startDate=start, endDate=end, guests=guests)
+
+        # Connection error handling.
+        else:
+            print("CANNOT CONNECT TO HH_DB")
+            error = "conn"
+            return render_template("error.html", error=error)
 
 
-
-
+# Login route
 @app.route('/account/login/')
 def log_in():
     return render_template('Account/Log_in.html')
 
+# My account route
+
 
 @app.route('/account/my_account/')
 def myAccount():
+    # Connection to DB
     conn = dbfunc.getConnection()
 
     if conn != None:
         print("CONNECTED TO DATABASE: HH_DB")
         dbcursor = conn.cursor()
 
+        # Select all bookings for customer whose ID is provided using session variable.
         dbcursor.execute(
             'SELECT * FROM FULLBOOKINGINFO WHERE customerId = %s;', (session.get('userId'), ))
 
@@ -353,6 +386,7 @@ def myAccount():
             data = list(row)
             datarows.append(data)
 
+        # Select all cancelled bookings for customer whose ID is provided using session variable.
         dbcursor.execute(
             "SELECT * FROM cancelledBookings WHERE customerId = %s", (session.get('userId'), ))
         rowsTwo = dbcursor.fetchall()
@@ -362,32 +396,46 @@ def myAccount():
             dataTwo = list(row)
             dataRowsTwo.append(dataTwo)
 
+        # Count the amount of cancelled bookings.
         dbcursor.execute(
             "SELECT COUNT(*) FROM cancelledBookings WHERE customerId = %s", (session.get('userId'), ))
         cancelledCount = dbcursor.fetchone()[0]
 
+        # Close connection.
         dbcursor.close()
         conn.close()
+        print("DISCONNECTED FROM HH_DB!")
 
-        if 'city' in session :
+        # If the user has been routed to myAccount through the booking process return user to booking pages.
+        if 'city' in session:
             return (redirect(url_for('booking')))
+        # Otherwise show the user their account.
         else:
             return render_template('Account/My_account.html', bookingData=datarows, cancelledData=dataRowsTwo, count=cancelledCount)
+    # Connection error handling.
     else:
-        print("NOT CONNECTED TO THE DATABASE")
+        print("CANNOT CONNECT TO HH_DB")
+        error = "conn"
+        return render_template("error.html", error=error)
+
+# Modify booking route
 
 
 @app.route('/account/modify_booking/', methods=['POST', 'GET'])
 def modify():
+    # Check form has been submitted.
     if request.method == 'POST':
+        # Collect bookingID from form.
         bookingId = request.form['modifyBooking']
 
+        # Connect to DB.
         conn = dbfunc.getConnection()
 
+        # Check connection.
         if conn != None:
             print("CONNECTED TO DATABASE: HH_DB")
             dbcursor = conn.cursor()
-
+            # Use booking ID to bring up the whole booking info.
             dbcursor.execute(
                 "SELECT * FROM bookings WHERE bookingId = %s;", (bookingId, ))
             rows = dbcursor.fetchall()
@@ -398,20 +446,29 @@ def modify():
                 datarows.append(data)
             dbcursor.close()
             conn.close()
+            print("DISCONNECTED FROM HH_DB!")
 
+            # Calculate the difference between todays date and booking date for use in refund logic.
             todayDate = date.today()
             dateDifference = datarows[0][4] - todayDate
             dateDifference = dateDifference.days
 
             return render_template('Account/modifyBooking.html', bookingInfo=datarows[0], daysLeft=dateDifference)
 
+        # Connection error handling.
         else:
-            print("NOT CONNECTED TO THE DATABASE")
+            print("CANNOT CONNECT TO HH_DB")
+            error = "conn"
+            return render_template("error.html", error=error)
+
+# Cancel booking route
 
 
 @app.route('/account/cancel_booking/', methods=['POST', 'GET'])
 def cancel():
+    # Validate POST request
     if request.method == 'POST':
+        # Gather variables from form
         daysBeforeBooking = int(request.form['Cancel'])
         bookingId = request.form['bookingId']
         customerId = request.form['customerId']
@@ -422,6 +479,7 @@ def cancel():
         guests = request.form['guests']
         totalPaid = float(request.form['totalPaid'])
 
+        # Business logic for refund amount.
         if daysBeforeBooking > 60:
             totalRefund = totalPaid
         elif daysBeforeBooking <= 60 and daysBeforeBooking > 30:
@@ -431,11 +489,13 @@ def cancel():
 
         todaysDate = date.today()
 
+        # Connect to DB
         conn = dbfunc.getConnection()
         if conn != None:
             print("CONNECTED TO DATABASE: HH_DB")
             dbcursor = conn.cursor()
 
+            # Create new record in cancelledBookings table and delete booking from bookings table.
             dbcursor.execute("INSERT INTO cancelledBookings (bookingId, customerId, roomId, dateBooked, \
             startDate, endDate, dateCancelled, guests, totalFare, totalRefunded) \
             VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s);", (bookingId, customerId, roomId, dateBooked,
@@ -446,59 +506,84 @@ def cancel():
             print("Booking cancelled!")
             dbcursor.close()
             conn.close()
+            print("DISCONNECTED FROM HH_DB!")
 
             return render_template('/Account/confirm_cancel.html', bookId=bookingId, refund=totalRefund)
+        # Connection error handling.
         else:
-            print("NOT CONNECTED TO THE DATABASE")
+            print("CANNOT CONNECT TO HH_DB")
+            error = "conn"
+            return render_template("error.html", error=error)
+
+# No account route
 
 
 @app.route('/account/no_account/')
 def noAccount():
     return render_template('Account/no_account.html')
 
+# Account route
+
 
 @app.route('/account/')
 def account():
+    # If user is admin redirect to admin hub else to regular user page
     if session.get('logged_in') == True:
         if session.get('userType') == "ADMIN":
             return redirect(url_for('adminHub'))
         else:
             return redirect(url_for('myAccount'))
+    # If not logged in redirect to no account route.
     else:
         return redirect(url_for('noAccount'))
+
+# Admin hub route
 
 
 @app.route('/account/adminHub/')
 def adminHub():
+    # Connect to DB
     conn = dbfunc.getConnection()
 
     if conn != None:
         print("CONNECTED TO DATABASE: HH_DB")
         dbcursor = conn.cursor()
-
+        # Select all unique hotels.
         dbcursor.execute("SELECT DISTINCT hotelCity FROM hotel;")
         cities = dbcursor.fetchall()
         data = []
         for city in cities:
             data.append(city)
 
-    return render_template('Account/admin.html', citiesData=data,)
+        return render_template('Account/admin.html', citiesData=data,)
+
+    # Connection error handling.
+    else:
+        print("CANNOT CONNECT TO HH_DB")
+        error = "conn"
+        return render_template("error.html", error=error)
+
+# Check bookings route for admin user
 
 
 @app.route('/check-bookings/', methods=['POST', 'GET'])
 def check_bookings():
-    error = ''
+    # Check POST request
     if request.method == 'POST':
+        # Pull variables from form
         startDate = request.form['startDate']
         endDate = request.form['endDate']
         city = request.form['hotel']
 
+        # Connect to DB
         conn = dbfunc.getConnection()
 
+        # Check DB connection
         if conn != None:
             print("CONNECTED TO DATABASE: HH_DB")
             dbcursor = conn.cursor()
 
+            # Select all bookings within time frame provided
             dbcursor.execute(
                 "SELECT * FROM fullbookinginfo WHERE hotelCity = %s AND startDate BETWEEN %s AND %s;", (city, startDate, endDate))
             rows = dbcursor.fetchall()
@@ -507,18 +592,27 @@ def check_bookings():
                 data = list(row)
                 datarows.append(data)
 
-    return render_template('Account/check_bookings.html', bookingData=datarows)
+            return render_template('Account/check_bookings.html', bookingData=datarows)
+        # Connection error handling.
+        else:
+            print("CANNOT CONNECT TO HH_DB")
+            error = "conn"
+            return render_template("error.html", error=error)
 
 
+# Sign up route
 @app.route('/account/signup/')
 def signup():
     return render_template('Account/Sign_up.html')
 
+# Sign up form route
+
 
 @app.route('/sign-up/', methods=['POST', 'GET'])
 def sign_up():
-    error = ''
+    # Check POST request
     if request.method == 'POST':
+        # Create variables from form
         firstName = request.form['fname']
         lastName = request.form['lname']
         dateOfBirth = request.form['dob']
@@ -527,22 +621,27 @@ def sign_up():
         password = request.form['password']
         passwordConfirm = request.form['confpassword']
 
+        # Check for password equality
         if password == passwordConfirm:
+            # Connect to DB
             conn = dbfunc.getConnection()
-
+            # Check DB connection
             if conn != None:
                 print("CONNECTED TO DATABASE: HH_DB")
                 dbcursor = conn.cursor()
 
+                # Create hashed password
                 hashedPassword = sha256_crypt.hash((str(password)))
+                # Check user does not already exist
                 verifyQuery = "SELECT * FROM customer WHERE email = %s;"
                 dbcursor.execute(verifyQuery, (email,))
                 rows = dbcursor.fetchall()
 
                 if dbcursor.rowcount > 0:
                     print("USER ALREADY EXISTS")
-                    error = "This email is already in use, please login or use another email."
-                    return render_template("Account/Sign_up.html", error=error)
+                    error = "email"
+                    return render_template("error.html", error=error)
+                # Otherwise create user.
                 else:
                     dbcursor.execute('INSERT INTO customer(fName, lName, dob, postcode, \
                     email, password) VALUES (%s, %s, %s, %s, %s, %s);', (firstName,
@@ -551,29 +650,32 @@ def sign_up():
                     print("USER CREATED SUCCESSFULLY")
                     dbcursor.close()
                     conn.close()
+                    print("DISCONNECTED FROM HH_DB!")
+
                     return redirect(url_for('login'))
 
-                    # ADD REDIRECT HERE!
-
+            # Connection error handling
             else:
-                print("CONNECTION TO DATABASE FAILED")
-                return redirect(url_for('index'))
+                print("CANNOT CONNECT TO HH_DB")
+                error = "conn"
+                return render_template("error.html", error=error)
 
         else:
-            alert = True
             return redirect(url_for('signup'))
 
-
+# Login route
 @app.route('/login/', methods=['POST', 'GET'])
 def login():
     form = {}
-    error = ''
 
+    # Check request method
     if request.method == "POST":
+        # Grab variables from form
         email = request.form['email']
         password = request.form['password']
         form = request.form
 
+        # Check email and password have been entered correctly
         if email != None and password != None:
             conn = dbfunc.getConnection()
             if conn != None:
@@ -583,97 +685,142 @@ def login():
                                  (email,))
                 data = dbcursor.fetchone()
 
+                # Error handling for incorrect email combo.
                 if dbcursor.rowcount < 1:
-                    error = "Email or password is incorrect, please try again."
+                    error = "login"
                     dbcursor.close()
-                    return render_template("Account/Log_in.html", error=error)
+                    print("USER ENTERED INCORRECT DETAILS")
+                    return render_template("error.html", error=error)
+
                 else:
+                    # Check password
                     if sha256_crypt.verify(request.form['password'], str(data[0])):
                         conn = dbfunc.getConnection()
+                        # If correct connect to DB.
                         if conn != None:
                             print("CONNECTED TO HH_DB!")
                             dbcursor = conn.cursor()
+                            # Get user details
                             dbcursor.execute(
                                 "SELECT fName, lName, customerId, userType FROM customer WHERE email = %s;", (email, ))
                             data = dbcursor.fetchall()
                             data = data[0]
+                            # Close connection to DB
                             dbcursor.close()
                             conn.close()
+                            print("DISCONNECTED FROM HH_DB!")
 
+                            # Create session variables
                             session['logged_in'] = True
                             session['email'] = request.form['email']
                             session['name'] = data[0] + " " + data[1]
                             session['userId'] = data[2]
                             session['userType'] = data[3]
-                            print('You are now logged in!')
+
+                            # Redirect user to account page
+                            print('USER ' + str(session['userId']) + ' LOGGED IN')
                             return redirect(url_for('account'))
+
+                        # Connection error handling
+                        else:
+                            print("CANNOT CONNECT TO HH_DB")
+                            error = "conn"
+                            return render_template("error.html", error=error)
+                    # Incorrect details
                     else:
-                        error = "Invalid credentials, please try again"
+                        error = "login"
+                        print("USER ENTERED INCORRECT DETAILS")
+                        return render_template("error.html", error=error)
 
-            return render_template("Account/Log_in.html", form=form, error=error)
+            # Connection error handling
+            else:
+                print("CANNOT CONNECT TO HH_DB")
+                error = "conn"
+                return render_template("error.html", error=error)
+        # No details entered
+        else:
+            print("NO DETAILS ENTERED")
+            error = "login"
+            return render_template("error.html", error=error)
 
-    return render_template('Account/Log_in.html', form=form, error=error)
+# logout route
 
 
 @app.route('/account/my_account/logout/')
 def logout():
+    # Get rid of all session variables and set logout to true.
     session.clear()
     logout = True
     return render_template('index.html', logout=logout)
 
+# Booking route
+
 
 @app.route('/book/', methods=['POST', 'GET'])
 def booking():
+    # Check request method
     if request.method == 'POST':
+        # Create session variables from form in case user is not logged in.
         session['room'] = request.form['roomType']
         session['start'] = request.form['start-date']
         session['end'] = request.form['end-date']
         session['noOfGuests'] = request.form['guest-no']
         session['city'] = request.form['city']
 
-
+    # Extract session variables into local variables
     room = session['room']
     start = session['start']
     end = session['end']
     noOfGuests = session['noOfGuests']
     city = session['city']
-    
+
+    # Create proper start and end date variables in correct format.
     startDate = datetime.strptime(start, '%Y-%m-%d')
     endDate = datetime.strptime(
         end, '%Y-%m-%d')
     totalNights = endDate - startDate
 
+    # Create lookup list
     lookup = [city, start, end, noOfGuests, totalNights.days, room]
 
+    # Check session to see if user is logged in
     if session.get('logged_in') == True:
 
+        # Connect to DB
         conn = dbfunc.getConnection()
+        # Check DB connection
         if conn != None:
             print("CONNECTED TO DATABASE: HH_DB")
             dbcursor = conn.cursor()
 
+            # Look up count of all rooms with room type and hotel that user has selected.
             dbcursor.execute(
                 'SELECT COUNT(*) FROM hotel WHERE hotelCity = %s and roomType = %s;', (city, room))
             totalRooms = dbcursor.fetchall()
             totalRooms = totalRooms[0][0]
 
+            # Look up count of booked rooms with type, hotel, start and end date that user has selected.
             dbcursor.execute(
                 'SELECT COUNT(*) FROM v WHERE startDate = %s and endDate = %s and roomType = %s and hotelCity = %s;', (start, end, room, city))
             roomsBooked = dbcursor.fetchall()
             roomsBooked = roomsBooked[0][0]
 
+            # Select unbooked rooms from users selection.
             dbcursor.execute('SELECT * FROM hotel WHERE NOT EXISTS (SELECT * FROM bookings WHERE bookings.roomId = hotel.roomId and bookings.startDate = %s and bookings.endDate = %s) and hotelCity = %s and roomType = %s;', (start, end, city, room))
             rows = dbcursor.fetchall()
             datarows = []
 
+            # Select Standard room data from user selected hotel for business logic.
             dbcursor.execute(
                 'SELECT fare, offPeakFare FROM hotel WHERE roomType = "Standard" and hotelCity = %s', (city, ))
             standardRoomData = dbcursor.fetchall()
             standardRoomData = standardRoomData[0]
 
+            # Calculate peak times
             peakStart = datetime(startDate.year, 4, 1)
             peakEnd = datetime(startDate.year, 10, 1)
 
+            # calculate booking discount
             todaysDate = datetime.today()
             dateDifference = startDate - todaysDate
             dateDifference = dateDifference.days
@@ -687,8 +834,9 @@ def booking():
             else:
                 discount = 1
 
+            # Check if there is availability in selected hotel.
             if roomsBooked < totalRooms:
-
+                # Calculate price for user based on their selections
                 for row in rows:
                     data = list(row)
                     if peakStart <= startDate <= peakEnd and peakStart <= endDate <= peakEnd:
@@ -712,17 +860,23 @@ def booking():
                         fare = fare * discount
                         peakStatus = False
 
+                    # Work out fare in other currencies
                     fareEuros = fare * 1.2
                     fareUSD = fare * 1.6
 
+                    # Append fares to booking data
                     data.append(fare)
                     data.append(fareEuros)
                     data.append(fareUSD)
 
                     datarows.append(data)
+
+                # Close DB connection.
                 dbcursor.close()
                 conn.close()
+                print("DISCONNECTED FROM HH_DB!")
 
+                # Remove booking data from session.
                 session.pop('room', None)
                 session.pop('start', None)
                 session.pop('noOfGuests', None)
@@ -730,25 +884,30 @@ def booking():
 
                 return render_template('Booking/book.html', bookingSet=datarows, lookup=lookup, status=peakStatus)
 
+            # Overbooking error handling.
             else:
-                print("Too many rooms booked on this time already")
-                return render_template('index.html')
-        
+                print("USER HAS SELECTED A DATE THAT IS ALREADY FULLY BOOKED.")
+                error = "overbooked"
+                return render_template('error.html', error=error)
+
+        # Connection error handling.
         else:
-            print("NOT CONNECTED TO THE DATABASE")
-            return redirect(url_for('index'))
+            print("CANNOT CONNECT TO HH_DB")
+            error = "conn"
+            return render_template("error.html", error=error)
 
+    #If user not logged in redirect to login and sign up page.
     else:
-        login = False
-        return redirect(url_for('noAccount', login=login))
-    # process args
+        print("USER IS NOT LOGGED IN")
+        error="notLogged"
+        return render_template("error.html", error=error)
 
-
-
-
+# Booking confirm route
 @app.route('/book_confirm/', methods=['POST', 'GET'])
 def booking_confirm():
+    # Check request method
     if request.method == 'POST':
+        #Create variables from form
         choice = request.form['choice']
         room = request.form['room']
         confCity = request.form['city']
@@ -757,12 +916,14 @@ def booking_confirm():
         guests = request.form['guests']
         address = request.form['address']
 
+        #create variable for amount of nights
         nights = datetime.strptime(
             checkOut, '%Y-%m-%d') - datetime.strptime(checkIn, '%Y-%m-%d')
 
+        #Create variable for user currency choice
         currencyChoice = request.form["paymentType"]
-        print(currencyChoice)
 
+        #Add total fare for selected currency
         if currencyChoice == "Pounds":
             totalFare = request.form["totalFarePounds"]
         elif currencyChoice == "Euros":
@@ -770,32 +931,45 @@ def booking_confirm():
         elif currencyChoice == "Dollars":
             totalFare = request.form["totalFareDollars"]
 
+        #Create booking data list
         bookingData = [choice, room, confCity, address,
                        checkIn, checkOut, guests, totalFare, nights.days, currencyChoice]
         todaysDate = date.today()
-
+        
+        #Connect to DB
         conn = dbfunc.getConnection()
         if conn != None:
             print("CONNECTED TO DATABASE: HH_DB")
             dbcursor = conn.cursor()
 
+            # Get users customer ID
             dbcursor.execute(
                 'SELECT customerId FROM customer WHERE email = %s', (session.get('email'), ))
             loggedInCustomerId = dbcursor.fetchall()
             loggedInCustomerId = loggedInCustomerId[0][0]
 
+            # Create booking
             dbcursor.execute('INSERT INTO bookings (customerId, roomId, dateBooked, startDate, endDate, guests, totalFare, currency) VALUES \
                 (%s, %s, %s, %s, %s, %s, %s, %s);', (loggedInCustomerId, choice, todaysDate, checkIn, checkOut, guests, totalFare, currencyChoice))
             print('Booking statement executed successfully.')
             conn.commit()
 
+            #Close connections and show completed booking
             dbcursor.close()
             conn.close()
-            return render_template('Booking/confirm.html', resultset=bookingData)
-        else:
-            print('DB CONNECTION FAILED.')
-            return redirect(url_for('index'))
+            print("DISCONNECTED FROM HH_DB!")
 
+            return render_template('Booking/confirm.html', resultset=bookingData)
+        
+        # Connection error handling.
+        else:
+            print("CANNOT CONNECT TO HH_DB")
+            error = "conn"
+            return render_template("error.html", error=error)
+
+
+
+# OTHER ROUTES YET TO BE COMPLETED.
 @app.route('/info/about/')
 def about():
     return render_template('/Info/About.html')
