@@ -1,55 +1,75 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <title>Horizon Holidays - Contact Us!</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" type='text/css' href="{{ url_for('static', filename='styles/main.css') }}" />
-  </head>
+{% extends 'base.html' %} {% block header %} {% endblock %} {% block title %}
+Contact us{% endblock %} {% block content %}
 
-  <body>
-    <div class="header">
-      <a href="{{ url_for('index') }}"><h1>Horizon Holidays</h1></a>
-      <h2>Contact us!</h2>
-    </div>
+<nav class="centre">
+  <ul class="aside">
+  <li><h2>
+    Have questions not covered in the
+    <a href="{{ url_for('about') }}">About us </a> or
+    <a href="{{ url_for('privacy') }}">Privacy sections?</a>
+  </h2></li>
+  <li><h3>Let us know who you are and how we can help you below!</h3></li>
+</ul>
+</nav>
+  <div class="row">
+    <div class="col-1 col-s-1"></div>
 
-    <div class="col-12 aside">
-      <h2>
-        Have questions not covered in the <a href="{{ url_for('about') }}">About us </a> or
-        <a href="{{ url_for('privacy') }}">Privacy sections?</a>
-      </h2>
-      <h3>Let us know who you are and how we can help you below!</h3>
-    </div>
-    <div class="col-2"></div>
-    <div class="col-8">
-      <form class="contact_us" id="contact_us">
-        <label for="first_name">First Name: </label>
-        <input
-          type="text"
-          name="first_name"
-          id="first_name"
-          class="contact_us"
-        />
-        <br />
-        <label for="last_name">Last Name: </label>
-        <input type="text" name="last_name" id="last_name" class="contact_us" />
-        <br />
-        <label for="email">Email Address: </label>
-        <input type="email" name="email" id="email" class="contact_us" />
-        <br />
-        <label for="comments">Comments or Queries: </label>
-        <textarea
-          rows="10"
-          cols="50"
-          name="comments"
-          id="comments"
-          class="contact_us"
-        ></textarea>
-        <br />
+    <div class="col-10 col-s-10 aside">
+      <form class="form" id="comments" action="/comments/" method="POST">
+        <div class="container">
+          <label for="fname">First Name: </label>
+          <input
+            type="text"
+            name="fname"
+            id="fname"
+            class="form"
+            placeholder="Enter first name..."
+          />
+          <br />
+
+          <label for="lname">Last Name: </label>
+          <input
+            type="text"
+            name="lname"
+            id="lname"
+            class="form"
+            placeholder="Enter last name..."
+          />
+          <br />
+          <label for="email">Email Address: </label>
+          <input
+            type="email"
+            name="email"
+            id="email"
+            class="form"
+            placeholder="example@example.com"
+          />
+          <br />
+          <label for="comments"
+            >Please Enter your comments or concerns here:
+          </label>
+          <textarea
+            name="comments"
+            id="comments"
+            cols="30"
+            rows="30"
+          ></textarea>
+          <div class="clearfix">
+            <button
+              type="button"
+              onclick="window.location.href='{{ url_for('index') }}';"
+              class="cancelBtn"
+            >
+              Cancel
+            </button>
+            <button form="comments" class="signUpBtn" value="submit">
+              Submit Comments
+            </button>
+          </div>
+        </div>
       </form>
-      <button form="contact_us" value="Submit">Submit</button>
     </div>
-    <div class="footer">
-      <a href="{{ url_for('privacy') }}">Privacy Statement</a>
-    </div>
-  </body>
-</html>
+  </div>
+</div>
+
+{% endblock %}

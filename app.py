@@ -570,9 +570,30 @@ def adminHub():
         error = "conn"
         return render_template("error.html", error=error)
 
+@app.route('/account/comments/')
+def adminComments():
+    # Connect to DB
+    conn = dbfunc.getConnection()
+
+    if conn != None:
+        print("CONNECTED TO DATABASE: HH_DB")
+        dbcursor = conn.cursor()
+        # Retrieve comments
+        dbcursor.execute("SELECT * FROM comments;")
+        rows = dbcursor.fetchall()
+        datarows = []
+        for row in rows:
+            data = list(row)
+            datarows.append(data)
+
+        return render_template('Account/display_comments.html', commentsData=datarows)
+    # Connection error handling.
+    else:
+        print("CANNOT CONNECT TO HH_DB")
+        error = "conn"
+        return render_template("error.html", error=error)
+
 # Check bookings route for admin user
-
-
 @app.route('/check-bookings/', methods=['POST', 'GET'])
 def check_bookings():
     # Check POST request
@@ -981,10 +1002,48 @@ def booking_confirm():
 def about():
     return render_template('/Info/About.html')
 
-
+#Contact us route
 @app.route('/info/contact_us/')
 def contact():
     return render_template('Info/Contact_us.html')
+
+@app.route('/comments/', methods=['POST', 'GET'])
+def comments():
+    # Check request method
+    if request.method == 'POST':
+        #Create variables from form
+        firstName = request.form['fname']
+        lastName = request.form['lname']
+        email = request.form['email']
+        comment = request.form['comments']
+        
+        currentTime = datetime.now()
+        
+
+        #Connect to DB
+        conn = dbfunc.getConnection()
+        if conn != None:
+            print("CONNECTED TO DATABASE: HH_DB")
+            dbcursor = conn.cursor()
+
+            #Execute insertion into DB
+            dbcursor.execute('INSERT INTO comments (fName, lName, email, comments, timeLeft) VALUES (%s, %s, %s, %s, %s);', (firstName, lastName, email, comment, currentTime))
+            print('Comment statement executed successfully.')
+            conn.commit()
+            #Close connections and redirect user
+            dbcursor.close()
+            conn.close()
+            print("DISCONNECTED FROM HH_DB!")
+
+            error="comment"
+
+            return render_template('error.html', error=error)
+        
+        # Connection error handling.
+        else:
+            print("CANNOT CONNECT TO HH_DB")
+            error = "conn"
+            return render_template("error.html", error=error)
 
 
 @app.route('/info/privacy/')

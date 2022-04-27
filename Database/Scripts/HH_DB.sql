@@ -77,6 +77,17 @@ CREATE VIEW unbooked AS
 SELECT *
 FROM hotel
 WHERE NOT EXISTS (SELECT * FROM bookings WHERE bookings.roomId = hotel.roomId);
+
+SELECT * FROM BOOKINGS WHERE bookingId = 102;
+
+SELECT * FROM cancelledbookings;
+
+ALTER TABLE cancelledbookings
+ADD COLUMN currency VARCHAR(20) NOT NULL DEFAULT 'Pounds';
+
+SELECT * FROM bookings;
+
+SELECT COUNT(*) FROM bookings WHERE customerId = 7;
     
     
 SELECT * FROM unbooked;
@@ -207,3 +218,16 @@ INSERT INTO hotel (roomType, hotelCity, address, fare, offPeakFare, maxOccupancy
 SELECT COUNT(*) FROM v WHERE hotelCity = "Aberdeen" and maxOccupancy <= 1 and startDate = '01.01.2000' and endDate = '01.01.2000';
 
 select * from v;
+
+
+CREATE TABLE comments(
+commentNo INT NOT NULL auto_increment,
+fName VARCHAR(20) NOT NULL,
+lName VARCHAR(20) NOT NULL,
+email VARCHAR(32) NOT NULL,
+comments VARCHAR(5000) NOT NULL,
+timeLeft VARCHAR(50) NOT NULL,
+primary key(commentNo) );
+drop table comments;
+select * from comments;
+INSERT INTO comments(fName, lName, email, comments) VALUES ('John', 'Smith', 'test', 'test');

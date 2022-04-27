@@ -221,7 +221,7 @@ input[type="submit"] {
   margin: 10px;
 }
 
-.form input[type=text], input[type=password], input[type=date], input[type=email], select{
+.form input[type=text], input[type=password], input[type=date], input[type=email], select, textarea{
   width: 100%;
   padding: 15px;
   margin: 5px 0 22px 0;
