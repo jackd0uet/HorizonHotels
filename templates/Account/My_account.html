@@ -31,43 +31,51 @@
 {% endif %}
 <div class="row centre">
   <div class="col-1 col-s-1"></div>
-  <div class="col-10 col-s-10">   
-  <h2>My Bookings:</h2>
-  <form action="/account/modify_booking/" method="POST">
-  <table>
-    <tr>    
-      <th>Booking ID</th>
-      <th>Room Id</th>
-      <th>Date Booked</th>
-      <th>Start of Booking</th>
-      <th>End of Booking</th>
-      <th>Total Guests</th>
-      <th>Amount Paid</th>
-      <th>Room Type</th>
-      <th>City</th>
-      <th>Address</th>
-    </tr>
+  <div class="col-10 col-s-10"> 
+  {% if bookedCount >= 1: %}  
+    <h2>My Bookings:</h2>
+    <form action="/account/modify_booking/" method="POST">
+    <table>
+      <tr>    
+        <th>Booking ID</th>
+        <th>Room Id</th>
+        <th>Date Booked</th>
+        <th>Start of Booking</th>
+        <th>End of Booking</th>
+        <th>Total Guests</th>
+        <th>Amount Paid</th>
+        <th>Room Type</th>
+        <th>City</th>
+        <th>Address</th>
+      </tr>
 
-  {% for row in bookingData %}
-    <tr>
-      <td>{{row[0]}}</td>
-      <td>{{row[2]}}</td>
-      <td>{{row[3]}}</td>
-      <td>{{row[4]}}</td>
-      <td>{{row[5]}}</td>
-      <td>{{row[6]}}</td>
-      <td>{{row[7]}}</td>
-      <td>{{row[8]}}</td>
-      <td>{{row[9]}}</td>
-      <td>{{row[10]}}</td>
-      <td><input type="radio" name="modifyBooking" id="modifyBooking" value="{{row[0]}}" checked></td>
-    </tr>  
-  {% endfor %}
-  </table>
-  <input type="submit" value="Edit Selected booking!">
-  </form>
-
-  {% if count > 0: %}
+    {% for row in bookingData %}
+      <tr>
+        <td>{{row[0]}}</td>
+        <td>{{row[2]}}</td>
+        <td>{{row[3]}}</td>
+        <td>{{row[4]}}</td>
+        <td>{{row[5]}}</td>
+        <td>{{row[6]}}</td>
+        <td>{{row[7]}}</td>
+        <td>{{row[8]}}</td>
+        <td>{{row[9]}}</td>
+        <td>{{row[10]}}</td>
+        <td><input type="radio" name="modifyBooking" id="modifyBooking" value="{{row[0]}}" checked></td>
+      </tr>  
+    {% endfor %}
+    </table>
+    <input type="submit" value="Edit Selected booking!">
+    </form>
+  {% else: %}
+    <nav class="centre">
+      <ul class="aside">
+        <li><h2>You have not booked anything with us yet.</h2></li>
+        <li class="navbar"><span><button class="navbarButtons" onclick="window.location.href='{{ url_for('ourCities') }}';">Book your dream getaway today!</button></span></li>
+      </ul>
+    </nav>
+  {% endif %}
+  {% if cancelledCount > 0: %}
     <h2>Cancelled Bookings:</h2>
     <table>
       <tr>

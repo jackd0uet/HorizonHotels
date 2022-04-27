@@ -58,12 +58,16 @@ CREATE TABLE cancelledBookings (
     SELECT COUNT(*) FROM v WHERE startDate = '2022-03-10' and endDate = '2022-03-11' and roomType = 'Standard' and hotelCity = 'Aberdeen';
 
 CREATE VIEW V AS
-	SELECT bookings.bookingId, bookings.roomId, bookings.startDate, bookings.endDate,
+	SELECT bookings.bookingId, bookings.roomId, bookings.startDate, bookings.endDate, bookings.guests,
     hotel.roomType, hotel.hotelCity
 FROM
 bookings, hotel
 WHERE
 bookings.roomId = hotel.roomId;
+
+DROP VIEW v;
+
+
 
 select * from v;
 
@@ -196,3 +200,10 @@ drop view fullbookinginfo;
 SELECT * FROM fullbookinginfo WHERE hotelCity = 'Aberdeen' AND startDate BETWEEN '2022-04-19' AND '2022-05-01';
 
 SELECT COUNT(*) FROM hotel WHERE hotelCity = 'Aberdeen';
+
+SELECT * FROM hotel WHERE hotelCity = 'Aberdeen';
+INSERT INTO hotel (roomType, hotelCity, address, fare, offPeakFare, maxOccupancy) VALUES ('Family', 'Aberdeen', 'AB13 0AB', 210, 90, 6);
+
+SELECT COUNT(*) FROM v WHERE hotelCity = "Aberdeen" and maxOccupancy <= 1 and startDate = '01.01.2000' and endDate = '01.01.2000';
+
+select * from v;

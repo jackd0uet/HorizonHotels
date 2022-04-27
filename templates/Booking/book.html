@@ -1,39 +1,44 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <title>Book</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" type='text/css' href="{{ url_for('static', filename='styles/main.css') }}" />
-  </head>
+{% extends 'base.html' %} {% block header %} {% endblock %} {% block title %}
+Our Cities{% endblock %} {% block content %}
 
-  <body>
-    <h1>Welcome to the booking process...</h1>
-    <h2>You are only a couple of steps away from your dream stay!</h2>
+<nav class="centre">
+  <ul class="aside">
+    <li><h2>Welcome to the booking process...</h2></li>
+    <li><h3>You are only a couple of steps away from your dream stay!</h3></li>
+</ul>
+</nav>
 
-    <form action="/book_confirm/" method="POST">
-      City : {{lookup[0]}} <br/>
-      <input type="hidden" name="city" id="city" value="{{lookup[0]}}"/>
-      Start Date : {{lookup[1]}} <br/>
-      <input type="hidden" name="start" id="start" value="{{lookup[1]}}"/>
-      End Date : {{lookup[2]}} <br/>
-      <input type="hidden" name="end" id="end" value="{{lookup[2]}}"/>
-      Number of Guests : {{lookup[3]}} <br/>
-      <input type="hidden" name="guests" id="guests" value="{{lookup[3]}}"/>
-      Number of Nights : {{lookup[4]}} <br/>
-      <input type="hidden" name="nights" id="nights" value="{{lookup[4]}}"/>
-      Room Type : {{lookup[5]}} <br/>
-      <input type="hidden" name="room" id="room" value="{{lookup[5]}}"/>
-
-
-
-      <table>
+<form action="/book_confirm/" method="POST" class="form" id="bookConfirm">
+  <input type="hidden" name="city" id="city" value="{{lookup[0]}}"/>
+  <input type="hidden" name="start" id="start" value="{{lookup[1]}}"/>
+  <input type="hidden" name="end" id="end" value="{{lookup[2]}}"/>
+  <input type="hidden" name="guests" id="guests" value="{{lookup[3]}}"/>
+  <input type="hidden" name="nights" id="nights" value="{{lookup[4]}}"/>
+  <input type="hidden" name="room" id="room" value="{{lookup[5]}}"/>
+  <input type="hidden" name="address" value="{{bookingSet[0][3]}}">
+  <div class="row centre">
+    <div class="col-1 col-s-1"></div>
+    <div class="col-10 col-s-10">
+      <table class="centre">
         <tr>
-          <th>Nightly Fare</th> <th> Address</th> <th>Total Fare</th>
-          <th>Room Type</th><th>Select</th>
+          <th>City</th>
+          <th>Start Date</th>
+          <th>End Date</th>
+          <th>Number of Guests</th>
+          <th>Number of Nights</th>
+          <th>Room Type</th>
+          <th>Nightly Fare</th>
+          <th>Address</th>
+          <th>Total Fare</th>
+          <th>Room Type</th>
         </tr>
-
-
         <tr>
+          <td>{{lookup[0]}}</td>
+          <td>{{lookup[1]}}</td>
+          <td>{{lookup[2]}}</td>
+          <td>{{lookup[3]}}</td>
+          <td>{{lookup[4]}}</td>
+          <td>{{lookup[5]}}</td>
           {% if status == True: %}
             <td>{{bookingSet[0][4]}}</td>
           {% else: %}
@@ -42,11 +47,15 @@
           <td>{{bookingSet[0][3]}}</td>
           <td>{{bookingSet[0][7]}}</td>
           <td>{{bookingSet[0][1]}}</td>
-          <td><input type="radio" name="choice" value="{{bookingSet[0][0]}}" checked></td>
           
         </tr>
-              <input type="hidden" name="address" value="{{bookingSet[0][3]}}">
-
+        </table>
+      </div>
+      <div class="col-1 col-s1"></div>
+      <div class="row centre">
+        <div class="col-1 col-s1"></div>
+        <div class="col-10 col-s10">
+        <table>
         <tr>
           <th>Currency</th>
           <th>Price</th>
@@ -70,11 +79,22 @@
           <td><input type="radio" name="paymentType" value="Dollars"></td>
           <input type="hidden" name="totalFareDollars" value="{{bookingSet[0][9]}}">
         </tr>
-
       </table>
-      <input type="submit" value="Confirm Booking!">
-    </form>
-    
-  </body>
+  </div>
+  <div class="col-1 col-s1"></div>
 
-  </html>
+
+  <div class="row centre">
+    <div class="col-1 col-s-1"></div>
+    <div class="col-10 col-s-10">
+      <input type="submit" value="Confirm Booking!">
+      <h5>Please be aware that the total amount to pay may be different to simply multiplying the nightly rate by the amount of nights, this is because of pre-booking discounts and charges for extra people.</h5>
+    </div>
+    
+    <div class="col-1 col-s-1"></div>
+  </div>
+    </form>
+  
+  
+
+  {% endblock %}

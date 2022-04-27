@@ -375,6 +375,12 @@ def myAccount():
         print("CONNECTED TO DATABASE: HH_DB")
         dbcursor = conn.cursor()
 
+        # Count user bookings
+        dbcursor.execute(
+            'SELECT COUNT(*) FROM bookings WHERE customerId = %s;', (session.get('userId'), )
+        )
+        bookedCount = dbcursor.fetchone()[0]
+
         # Select all bookings for customer whose ID is provided using session variable.
         dbcursor.execute(
             'SELECT * FROM FULLBOOKINGINFO WHERE customerId = %s;', (session.get('userId'), ))
@@ -411,7 +417,7 @@ def myAccount():
             return (redirect(url_for('booking')))
         # Otherwise show the user their account.
         else:
-            return render_template('Account/My_account.html', bookingData=datarows, cancelledData=dataRowsTwo, count=cancelledCount)
+            return render_template('Account/My_account.html', bookedCount=bookedCount, bookingData=datarows, cancelledData=dataRowsTwo, cancelledCount=cancelledCount)
     # Connection error handling.
     else:
         print("CANNOT CONNECT TO HH_DB")
@@ -478,6 +484,7 @@ def cancel():
         endDate = request.form['endDate']
         guests = request.form['guests']
         totalPaid = float(request.form['totalPaid'])
+        currency = request.form['currency']
 
         # Business logic for refund amount.
         if daysBeforeBooking > 60:
@@ -497,18 +504,18 @@ def cancel():
 
             # Create new record in cancelledBookings table and delete booking from bookings table.
             dbcursor.execute("INSERT INTO cancelledBookings (bookingId, customerId, roomId, dateBooked, \
-            startDate, endDate, dateCancelled, guests, totalFare, totalRefunded) \
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s);", (bookingId, customerId, roomId, dateBooked,
-                                                                startDate, endDate, todaysDate, guests, totalPaid, totalRefund, ))
+            startDate, endDate, dateCancelled, guests, totalFare, totalRefunded, currency) \
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);", (bookingId, customerId, roomId, dateBooked,
+                                                                startDate, endDate, todaysDate, guests, totalPaid, totalRefund, currency,))
             dbcursor.execute(
                 "DELETE FROM bookings WHERE bookingId = %s;", (bookingId, ))
             conn.commit()
-            print("Booking cancelled!")
+            print("Booking " + bookingId + " cancelled!")
             dbcursor.close()
             conn.close()
             print("DISCONNECTED FROM HH_DB!")
 
-            return render_template('/Account/confirm_cancel.html', bookId=bookingId, refund=totalRefund)
+            return render_template('/Account/confirm_cancel.html', bookId=bookingId, refund=totalRefund, currency=currency)
         # Connection error handling.
         else:
             print("CANNOT CONNECT TO HH_DB")
@@ -652,7 +659,7 @@ def sign_up():
                     conn.close()
                     print("DISCONNECTED FROM HH_DB!")
 
-                    return redirect(url_for('login'))
+                    return redirect(url_for('log_in'))
 
             # Connection error handling
             else:
