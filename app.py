@@ -47,11 +47,12 @@ def ourCities():
     return render_template('Our_cities.html', cities=data, availability=availability, date = False)
 
 
-@app.route('/our_cities_date_form/', methods=['POST', 'GET'])
-def ourCitiesDateForm():
+@app.route('/our_cities_form/', methods=['POST', 'GET'])
+def ourCitiesForm():
     if request.method == 'POST':
         start = request.form['sDate']
         end = request.form['eDate']
+        guests = request.form['guests']
 
         conn = dbfunc.getConnection()
         if conn != None:
@@ -67,12 +68,12 @@ def ourCitiesDateForm():
                 data.append(city)
 
             dbcursor.execute(
-                'SELECT COUNT(*) FROM hotel WHERE hotelCity = "Aberdeen";')
+                'SELECT COUNT(*) FROM hotel WHERE hotelCity = "Aberdeen" AND maxOccupancy <= %s;', (guests, ))
             aberdeenTotalRooms = dbcursor.fetchall()
             aberdeenTotalRooms = aberdeenTotalRooms[0][0]
 
             dbcursor.execute(
-                'SELECT COUNT(*) FROM v WHERE startDate = %s and endDate = %s and hotelCity = "Aberdeen";', (start, end, ))
+                'SELECT COUNT(*) FROM v WHERE startDate = %s and endDate = %s and hotelCity = "Aberdeen" AND guests <= %s;', (start, end, guests))
             aberdeenRoomsBooked = dbcursor.fetchall()
             aberdeenRoomsBooked = aberdeenRoomsBooked[0][0]
 
@@ -84,12 +85,12 @@ def ourCitiesDateForm():
             availability.append(aberdeen)
 
             dbcursor.execute(
-                'SELECT COUNT(*) FROM hotel WHERE hotelCity = "Belfast";')
+                'SELECT COUNT(*) FROM hotel WHERE hotelCity = "Belfast" AND maxOccupancy <= %s;', (guests, ))
             belfastTotalRooms = dbcursor.fetchall()
             belfastTotalRooms = belfastTotalRooms[0][0]
 
             dbcursor.execute(
-                'SELECT COUNT(*) FROM v WHERE startDate = %s and endDate = %s and hotelCity = "Belfast";', (start, end, ))
+                'SELECT COUNT(*) FROM v WHERE startDate = %s and endDate = %s and hotelCity = "Belfast" AND guests <= %s;', (start, end, guests))
             belfastRoomsBooked = dbcursor.fetchall()
             belfastRoomsBooked = belfastRoomsBooked[0][0]
 
@@ -101,12 +102,12 @@ def ourCitiesDateForm():
             availability.append(belfast)
 
             dbcursor.execute(
-                'SELECT COUNT(*) FROM hotel WHERE hotelCity = "Birmingham";')
+                'SELECT COUNT(*) FROM hotel WHERE hotelCity = "Birmingham" AND maxOccupancy <= %s;', (guests, ))
             birminghamTotalRooms = dbcursor.fetchall()
             birminghamTotalRooms = birminghamTotalRooms[0][0]
 
             dbcursor.execute(
-                'SELECT COUNT(*) FROM v WHERE startDate = %s and endDate = %s and hotelCity = "Birmingham";', (start, end, ))
+                'SELECT COUNT(*) FROM v WHERE startDate = %s and endDate = %s and hotelCity = "Birmingham" AND guests <= %s;', (start, end, guests))
             birminghamRoomsBooked = dbcursor.fetchall()
             birminghamRoomsBooked = birminghamRoomsBooked[0][0]
 
@@ -118,12 +119,12 @@ def ourCitiesDateForm():
             availability.append(birmingham)
 
             dbcursor.execute(
-                'SELECT COUNT(*) FROM hotel WHERE hotelCity = "Bristol";')
+                'SELECT COUNT(*) FROM hotel WHERE hotelCity = "Bristol" AND maxOccupancy <= %s;', (guests, ))
             bristolTotalRooms = dbcursor.fetchall()
             bristolTotalRooms = bristolTotalRooms[0][0]
 
             dbcursor.execute(
-                'SELECT COUNT(*) FROM v WHERE startDate = %s and endDate = %s and hotelCity = "Bristol";', (start, end, ))
+                'SELECT COUNT(*) FROM v WHERE startDate = %s and endDate = %s and hotelCity = "Bristol" AND guests <= %s;', (start, end, guests))
             bristolRoomsBooked = dbcursor.fetchall()
             bristolRoomsBooked = bristolRoomsBooked[0][0]
 
@@ -135,12 +136,12 @@ def ourCitiesDateForm():
             availability.append(bristol)
 
             dbcursor.execute(
-                'SELECT COUNT(*) FROM hotel WHERE hotelCity = "Cardiff";')
+                'SELECT COUNT(*) FROM hotel WHERE hotelCity = "Cardiff" AND maxOccupancy <= %s;', (guests, ))
             cardiffTotalRooms = dbcursor.fetchall()
             cardiffTotalRooms = cardiffTotalRooms[0][0]
 
             dbcursor.execute(
-                'SELECT COUNT(*) FROM v WHERE startDate = %s and endDate = %s and hotelCity = "Cardiff";', (start, end, ))
+                'SELECT COUNT(*) FROM v WHERE startDate = %s and endDate = %s and hotelCity = "Cardiff" AND guests <= %s;', (start, end, guests))
             cardiffRoomsBooked = dbcursor.fetchall()
             cardiffRoomsBooked = cardiffRoomsBooked[0][0]
 
@@ -152,12 +153,12 @@ def ourCitiesDateForm():
             availability.append(cardiff)
 
             dbcursor.execute(
-                'SELECT COUNT(*) FROM hotel WHERE hotelCity = "Edinburgh";')
+                'SELECT COUNT(*) FROM hotel WHERE hotelCity = "Edinburgh" AND maxOccupancy <= %s;', (guests, ))
             edinburghTotalRooms = dbcursor.fetchall()
             edinburghTotalRooms = edinburghTotalRooms[0][0]
 
             dbcursor.execute(
-                'SELECT COUNT(*) FROM v WHERE startDate = %s and endDate = %s and hotelCity = "Edinburgh";', (start, end, ))
+                'SELECT COUNT(*) FROM v WHERE startDate = %s and endDate = %s and hotelCity = "Edinburgh" AND guests <= %s;', (start, end, guests))
             edinburghRoomsBooked = dbcursor.fetchall()
             edinburghRoomsBooked = edinburghRoomsBooked[0][0]
 
@@ -169,12 +170,12 @@ def ourCitiesDateForm():
             availability.append(edinburgh)
 
             dbcursor.execute(
-                'SELECT COUNT(*) FROM hotel WHERE hotelCity = "Glasgow";')
+                'SELECT COUNT(*) FROM hotel WHERE hotelCity = "Glasgow" AND maxOccupancy <= %s;', (guests, ))
             glasgowTotalRooms = dbcursor.fetchall()
             glasgowTotalRooms = glasgowTotalRooms[0][0]
 
             dbcursor.execute(
-                'SELECT COUNT(*) FROM v WHERE startDate = %s and endDate = %s and hotelCity = "Glasgow";', (start, end, ))
+                'SELECT COUNT(*) FROM v WHERE startDate = %s and endDate = %s and hotelCity = "Glasgow" AND guests <= %s;', (start, end, guests))
             glasgowRoomsBooked = dbcursor.fetchall()
             glasgowRoomsBooked = glasgowRoomsBooked[0][0]
 
@@ -186,12 +187,12 @@ def ourCitiesDateForm():
             availability.append(glasgow)
 
             dbcursor.execute(
-                'SELECT COUNT(*) FROM hotel WHERE hotelCity = "London";')
+                'SELECT COUNT(*) FROM hotel WHERE hotelCity = "London" AND maxOccupancy <= %s;', (guests, ))
             londonTotalRooms = dbcursor.fetchall()
             londonTotalRooms = londonTotalRooms[0][0]
 
             dbcursor.execute(
-                'SELECT COUNT(*) FROM v WHERE startDate = %s and endDate = %s and hotelCity = "London";', (start, end, ))
+                'SELECT COUNT(*) FROM v WHERE startDate = %s and endDate = %s and hotelCity = "London" AND guests <= %s;', (start, end, guests))
             londonRoomsBooked = dbcursor.fetchall()
             londonRoomsBooked = londonRoomsBooked[0][0]
 
@@ -203,12 +204,12 @@ def ourCitiesDateForm():
             availability.append(london)
 
             dbcursor.execute(
-                'SELECT COUNT(*) FROM hotel WHERE hotelCity = "Manchester";')
+                'SELECT COUNT(*) FROM hotel WHERE hotelCity = "Manchester" AND maxOccupancy <= %s;', (guests, ))
             manchesterTotalRooms = dbcursor.fetchall()
             manchesterTotalRooms = manchesterTotalRooms[0][0]
 
             dbcursor.execute(
-                'SELECT COUNT(*) FROM v WHERE startDate = %s and endDate = %s and hotelCity = "Manchester";', (start, end, ))
+                'SELECT COUNT(*) FROM v WHERE startDate = %s and endDate = %s and hotelCity = "Manchester" AND guests <= %s;', (start, end, guests))
             manchesterRoomsBooked = dbcursor.fetchall()
             manchesterRoomsBooked = manchesterRoomsBooked[0][0]
 
@@ -220,12 +221,12 @@ def ourCitiesDateForm():
             availability.append(manchester)
 
             dbcursor.execute(
-                'SELECT COUNT(*) FROM hotel WHERE hotelCity = "Newcastle";')
+                'SELECT COUNT(*) FROM hotel WHERE hotelCity = "Newcastle" AND maxOccupancy <= %s;', (guests, ))
             newcastleTotalRooms = dbcursor.fetchall()
             newcastleTotalRooms = newcastleTotalRooms[0][0]
 
             dbcursor.execute(
-                'SELECT COUNT(*) FROM v WHERE startDate = %s and endDate = %s and hotelCity = "Newcastle";', (start, end, ))
+                'SELECT COUNT(*) FROM v WHERE startDate = %s and endDate = %s and hotelCity = "Newcastle" AND guests <= %s;', (start, end, guests))
             newcastleRoomsBooked = dbcursor.fetchall()
             newcastleRoomsBooked = newcastleRoomsBooked[0][0]
 
@@ -237,12 +238,12 @@ def ourCitiesDateForm():
             availability.append(newcastle)
 
             dbcursor.execute(
-                'SELECT COUNT(*) FROM hotel WHERE hotelCity = "Norwich";')
+                'SELECT COUNT(*) FROM hotel WHERE hotelCity = "Norwich" AND maxOccupancy <= %s;', (guests, ))
             norwichTotalRooms = dbcursor.fetchall()
             norwichTotalRooms = norwichTotalRooms[0][0]
 
             dbcursor.execute(
-                'SELECT COUNT(*) FROM v WHERE startDate = %s and endDate = %s and hotelCity = "Norwich";', (start, end, ))
+                'SELECT COUNT(*) FROM v WHERE startDate = %s and endDate = %s and hotelCity = "Norwich" AND guests <= %s;', (start, end, guests))
             norwichRoomsBooked = dbcursor.fetchall()
             norwichRoomsBooked = norwichRoomsBooked[0][0]
 
@@ -254,12 +255,12 @@ def ourCitiesDateForm():
             availability.append(norwich)
 
             dbcursor.execute(
-                'SELECT COUNT(*) FROM hotel WHERE hotelCity = "Nottingham";')
+                'SELECT COUNT(*) FROM hotel WHERE hotelCity = "Nottingham" AND maxOccupancy <= %s;', (guests, ))
             nottinghamTotalRooms = dbcursor.fetchall()
             nottinghamTotalRooms = nottinghamTotalRooms[0][0]
 
             dbcursor.execute(
-                'SELECT COUNT(*) FROM v WHERE startDate = %s and endDate = %s and hotelCity = "Nottingham";', (start, end, ))
+                'SELECT COUNT(*) FROM v WHERE startDate = %s and endDate = %s and hotelCity = "Nottingham" AND guests <= %s;', (start, end, guests))
             nottinghamRoomsBooked = dbcursor.fetchall()
             nottinghamRoomsBooked = nottinghamRoomsBooked[0][0]
 
@@ -271,12 +272,12 @@ def ourCitiesDateForm():
             availability.append(nottingham)
 
             dbcursor.execute(
-                'SELECT COUNT(*) FROM hotel WHERE hotelCity = "Oxford";')
+                'SELECT COUNT(*) FROM hotel WHERE hotelCity = "Oxford" AND maxOccupancy <= %s;', (guests, ))
             oxfordTotalRooms = dbcursor.fetchall()
             oxfordTotalRooms = oxfordTotalRooms[0][0]
 
             dbcursor.execute(
-                'SELECT COUNT(*) FROM v WHERE startDate = %s and endDate = %s and hotelCity = "Oxford";', (start, end, ))
+                'SELECT COUNT(*) FROM v WHERE startDate = %s and endDate = %s and hotelCity = "Oxford" AND guests <= %s;', (start, end, guests))
             oxfordRoomsBooked = dbcursor.fetchall()
             oxfordRoomsBooked = oxfordRoomsBooked[0][0]
 
@@ -288,12 +289,12 @@ def ourCitiesDateForm():
             availability.append(oxford)
 
             dbcursor.execute(
-                'SELECT COUNT(*) FROM hotel WHERE hotelCity = "Plymouth";')
+                'SELECT COUNT(*) FROM hotel WHERE hotelCity = "Plymouth" AND maxOccupancy <= %s;', (guests, ))
             plymouthTotalRooms = dbcursor.fetchall()
             plymouthTotalRooms = plymouthTotalRooms[0][0]
 
             dbcursor.execute(
-                'SELECT COUNT(*) FROM v WHERE startDate = %s and endDate = %s and hotelCity = "Plymouth";', (start, end, ))
+                'SELECT COUNT(*) FROM v WHERE startDate = %s and endDate = %s and hotelCity = "Plymouth" AND guests <= %s;', (start, end, guests))
             plymouthRoomsBooked = dbcursor.fetchall()
             plymouthRoomsBooked = plymouthRoomsBooked[0][0]
 
@@ -305,12 +306,12 @@ def ourCitiesDateForm():
             availability.append(plymouth)
 
             dbcursor.execute(
-                'SELECT COUNT(*) FROM hotel WHERE hotelCity = "Swansea";')
+                'SELECT COUNT(*) FROM hotel WHERE hotelCity = "Swansea" AND maxOccupancy <= %s;', (guests, ))
             swanseaTotalRooms = dbcursor.fetchall()
             swanseaTotalRooms = swanseaTotalRooms[0][0]
 
             dbcursor.execute(
-                'SELECT COUNT(*) FROM v WHERE startDate = %s and endDate = %s and hotelCity = "Swansea";', (start, end, ))
+                'SELECT COUNT(*) FROM v WHERE startDate = %s and endDate = %s and hotelCity = "Swansea" AND guests <= %s;', (start, end, guests))
             swanseaRoomsBooked = dbcursor.fetchall()
             swanseaRoomsBooked = swanseaRoomsBooked[0][0]
 
@@ -324,7 +325,9 @@ def ourCitiesDateForm():
             dbcursor.close()
             conn.close()
 
-            return render_template('Our_cities.html', cities=data, availability=availability, date = True, startDate = start, endDate = end)
+            return render_template('Our_cities.html', cities=data, availability=availability, date = True, startDate = start, endDate = end, guests=guests)
+
+
 
 
 @app.route('/account/login/')
@@ -366,7 +369,10 @@ def myAccount():
         dbcursor.close()
         conn.close()
 
-        return render_template('Account/My_account.html', bookingData=datarows, cancelledData=dataRowsTwo, count=cancelledCount)
+        if 'city' in session :
+            return (redirect(url_for('booking')))
+        else:
+            return render_template('Account/My_account.html', bookingData=datarows, cancelledData=dataRowsTwo, count=cancelledCount)
     else:
         print("NOT CONNECTED TO THE DATABASE")
 
@@ -619,111 +625,125 @@ def logout():
 @app.route('/book/', methods=['POST', 'GET'])
 def booking():
     if request.method == 'POST':
-        room = request.form['roomType']
-        start = request.form['start-date']
-        end = request.form['end-date']
-        noOfGuests = request.form['guest-no']
-        city = request.form['city']
+        session['room'] = request.form['roomType']
+        session['start'] = request.form['start-date']
+        session['end'] = request.form['end-date']
+        session['noOfGuests'] = request.form['guest-no']
+        session['city'] = request.form['city']
 
-        startDate = datetime.strptime(start, '%Y-%m-%d')
-        endDate = datetime.strptime(
-            end, '%Y-%m-%d')
-        totalNights = endDate - startDate
 
-        lookup = [city, start, end, noOfGuests, totalNights.days, room]
+    room = session['room']
+    start = session['start']
+    end = session['end']
+    noOfGuests = session['noOfGuests']
+    city = session['city']
+    
+    startDate = datetime.strptime(start, '%Y-%m-%d')
+    endDate = datetime.strptime(
+        end, '%Y-%m-%d')
+    totalNights = endDate - startDate
 
-        if session.get('logged_in') == True:
+    lookup = [city, start, end, noOfGuests, totalNights.days, room]
 
-            conn = dbfunc.getConnection()
-            if conn != None:
-                print("CONNECTED TO DATABASE: HH_DB")
-                dbcursor = conn.cursor()
+    if session.get('logged_in') == True:
 
-                dbcursor.execute(
-                    'SELECT COUNT(*) FROM hotel WHERE hotelCity = %s and roomType = %s;', (city, room))
-                totalRooms = dbcursor.fetchall()
-                totalRooms = totalRooms[0][0]
+        conn = dbfunc.getConnection()
+        if conn != None:
+            print("CONNECTED TO DATABASE: HH_DB")
+            dbcursor = conn.cursor()
 
-                dbcursor.execute(
-                    'SELECT COUNT(*) FROM v WHERE startDate = %s and endDate = %s and roomType = %s and hotelCity = %s;', (start, end, room, city))
-                roomsBooked = dbcursor.fetchall()
-                roomsBooked = roomsBooked[0][0]
+            dbcursor.execute(
+                'SELECT COUNT(*) FROM hotel WHERE hotelCity = %s and roomType = %s;', (city, room))
+            totalRooms = dbcursor.fetchall()
+            totalRooms = totalRooms[0][0]
 
-                dbcursor.execute('SELECT * FROM hotel WHERE NOT EXISTS (SELECT * FROM bookings WHERE bookings.roomId = hotel.roomId and bookings.startDate = %s and bookings.endDate = %s) and hotelCity = %s and roomType = %s;', (start, end, city, room))
-                rows = dbcursor.fetchall()
-                datarows = []
+            dbcursor.execute(
+                'SELECT COUNT(*) FROM v WHERE startDate = %s and endDate = %s and roomType = %s and hotelCity = %s;', (start, end, room, city))
+            roomsBooked = dbcursor.fetchall()
+            roomsBooked = roomsBooked[0][0]
 
-                dbcursor.execute(
-                    'SELECT fare, offPeakFare FROM hotel WHERE roomType = "Standard" and hotelCity = %s', (city, ))
-                standardRoomData = dbcursor.fetchall()
-                standardRoomData = standardRoomData[0]
+            dbcursor.execute('SELECT * FROM hotel WHERE NOT EXISTS (SELECT * FROM bookings WHERE bookings.roomId = hotel.roomId and bookings.startDate = %s and bookings.endDate = %s) and hotelCity = %s and roomType = %s;', (start, end, city, room))
+            rows = dbcursor.fetchall()
+            datarows = []
 
-                peakStart = datetime(startDate.year, 4, 1)
-                peakEnd = datetime(startDate.year, 10, 1)
+            dbcursor.execute(
+                'SELECT fare, offPeakFare FROM hotel WHERE roomType = "Standard" and hotelCity = %s', (city, ))
+            standardRoomData = dbcursor.fetchall()
+            standardRoomData = standardRoomData[0]
 
-                todaysDate = datetime.today()
-                dateDifference = startDate - todaysDate
-                dateDifference = dateDifference.days
+            peakStart = datetime(startDate.year, 4, 1)
+            peakEnd = datetime(startDate.year, 10, 1)
 
-                if dateDifference > 80:
-                    discount = .8
-                elif dateDifference >= 60 and dateDifference <= 79:
-                    discount = .9
-                elif dateDifference >= 45 and dateDifference <= 59:
-                    discount = .95
-                else:
-                    discount = 1
+            todaysDate = datetime.today()
+            dateDifference = startDate - todaysDate
+            dateDifference = dateDifference.days
 
-                if roomsBooked < totalRooms:
+            if dateDifference > 80:
+                discount = .8
+            elif dateDifference >= 60 and dateDifference <= 79:
+                discount = .9
+            elif dateDifference >= 45 and dateDifference <= 59:
+                discount = .95
+            else:
+                discount = 1
 
-                    for row in rows:
-                        data = list(row)
-                        if peakStart <= startDate <= peakEnd and peakStart <= endDate <= peakEnd:
-                            if room == "Double" and int(noOfGuests) > 1:
-                                doubleIncrease = standardRoomData[0] * .1
-                            else:
-                                doubleIncrease = 0
-                            fare = doubleIncrease
-                            fare = fare + \
-                                ((int(row[4]) * int(totalNights.days)))
-                            fare = fare * discount
-                            peakStatus = True
+            if roomsBooked < totalRooms:
+
+                for row in rows:
+                    data = list(row)
+                    if peakStart <= startDate <= peakEnd and peakStart <= endDate <= peakEnd:
+                        if room == "Double" and int(noOfGuests) > 1:
+                            doubleIncrease = standardRoomData[0] * .1
                         else:
-                            if room == "Double" and int(noOfGuests) > 1:
-                                doubleIncrease = standardRoomData[1] * 0.1
-                            else:
-                                doubleIncrease = 0
-                            fare = doubleIncrease
-                            fare = doubleIncrease + \
-                                ((int(row[5]) * int(totalNights.days)))
-                            fare = fare * discount
-                            peakStatus = False
+                            doubleIncrease = 0
+                        fare = doubleIncrease
+                        fare = fare + \
+                            ((int(row[4]) * int(totalNights.days)))
+                        fare = fare * discount
+                        peakStatus = True
+                    else:
+                        if room == "Double" and int(noOfGuests) > 1:
+                            doubleIncrease = standardRoomData[1] * 0.1
+                        else:
+                            doubleIncrease = 0
+                        fare = doubleIncrease
+                        fare = doubleIncrease + \
+                            ((int(row[5]) * int(totalNights.days)))
+                        fare = fare * discount
+                        peakStatus = False
 
-                        fareEuros = fare * 1.2
-                        fareUSD = fare * 1.6
+                    fareEuros = fare * 1.2
+                    fareUSD = fare * 1.6
 
-                        data.append(fare)
-                        data.append(fareEuros)
-                        data.append(fareUSD)
+                    data.append(fare)
+                    data.append(fareEuros)
+                    data.append(fareUSD)
 
-                        datarows.append(data)
-                    dbcursor.close()
-                    conn.close()
+                    datarows.append(data)
+                dbcursor.close()
+                conn.close()
 
-                    return render_template('Booking/book.html', bookingSet=datarows, lookup=lookup, status=peakStatus)
+                session.pop('room', None)
+                session.pop('start', None)
+                session.pop('noOfGuests', None)
+                session.pop('city', None)
 
-                else:
-                    print("Too many rooms booked on this time already")
-                    return render_template('index.html')
+                return render_template('Booking/book.html', bookingSet=datarows, lookup=lookup, status=peakStatus)
 
+            else:
+                print("Too many rooms booked on this time already")
+                return render_template('index.html')
+        
         else:
-            login = False
-            return redirect(url_for('noAccount', login=login))
-    # process args
+            print("NOT CONNECTED TO THE DATABASE")
+            return redirect(url_for('index'))
 
     else:
-        print("NOT CONNECTED TO THE DATABASE")
-        return redirect(url_for('index'))
+        login = False
+        return redirect(url_for('noAccount', login=login))
+    # process args
+
+
 
 
 @app.route('/book_confirm/', methods=['POST', 'GET'])
@@ -775,82 +795,6 @@ def booking_confirm():
         else:
             print('DB CONNECTION FAILED.')
             return redirect(url_for('index'))
-
-
-@app.route('/city/aberdeen/')
-def aberdeen():
-    return render_template('Cities/Aberdeen.html')
-
-
-@app.route('/city/belfast/')
-def belfast():
-    return render_template('Cities/Belfast.html')
-
-
-@app.route('/city/birmingham/')
-def birmingham():
-    return render_template('Cities/Birmingham.html')
-
-
-@app.route('/city/bristol/')
-def bristol():
-    return render_template('Cities/Bristol.html')
-
-
-@app.route('/city/cardiff/')
-def cardiff():
-    return render_template('Cities/Cardiff.html')
-
-
-@app.route('/city/edinburgh/')
-def edinburgh():
-    return render_template('Cities/Edinburgh.html')
-
-
-@app.route('/city/glasgow/')
-def glasgow():
-    return render_template('Cities/Glasgow.html')
-
-
-@app.route('/city/london/')
-def london():
-    return render_template('Cities/London.html')
-
-
-@app.route('/city/manchester/')
-def manchester():
-    return render_template('Cities/Manchester.html')
-
-
-@app.route('/city/newcastle/')
-def newcastle():
-    return render_template('Cities/Newcastle.html')
-
-
-@app.route('/city/norwich/')
-def norwich():
-    return render_template('Cities/Norwich.html')
-
-
-@app.route('/city/nottingham/')
-def nottingham():
-    return render_template('Cities/Nottingham.html')
-
-
-@app.route('/city/oxford/')
-def oxford():
-    return render_template('Cities/Oxford.html')
-
-
-@app.route('/city/plymouth/')
-def plymouth():
-    return render_template('Cities/Plymouth.html')
-
-
-@app.route('/city/swansea/')
-def swansea():
-    return render_template('Cities/Swansea.html')
-
 
 @app.route('/info/about/')
 def about():

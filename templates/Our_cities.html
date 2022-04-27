@@ -7,7 +7,7 @@ Our Cities{% endblock %} {% block content %}
     {% if date == False: %}
       <li><h3>When would you like to stay with us?</h3></li>
       <li>
-          <form class="form" id="ourCities" action="/our_cities_date_form/" method="POST">
+          <form class="form" id="ourCities" action="/our_cities_form/" method="POST">
               <div class="container">
                   <label for="sDate">Start Date: </label>
                   <input type="date" name="sDate" id="sDate" class="form">
@@ -15,6 +15,15 @@ Our Cities{% endblock %} {% block content %}
                   <label for="eDate">End Date: </label>
                   <input type="date" name="eDate" id="eDate" class="form">
                   <br>
+                  <label for="guests">Select number of guests:</label>
+                  <select name="guests" id="guests">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                  </select>
                   <div class="clearfix">
                       <button form="ourCities" class="form" value="submit">Search availability </button>
                   </div>
@@ -23,124 +32,178 @@ Our Cities{% endblock %} {% block content %}
       </li>
     {% elif date: %}
       <li><h3>Your selected dates are: {{startDate}} to {{endDate}}</h3></li>
+      {% if guests == "1": %}
+        <li><h3>You have selected: {{guests}} guest.</h3></li>
+      {% else: %}
+      <li><h3>You have selected: {{guests}} guests.</h3></li>
+      {% endif %}
       <li>
         <div class="container clearfix">
-          <button type="button" onclick="window.location.href='{{ url_for('ourCities') }}';">Edit Dates</button>
+          <button type="button" onclick="window.location.href='{{ url_for('ourCities') }}';">Edit Dates or Guests</button>
         </div>
       </li>
+    <form action="/book/" class="form" method="POST" id="book">
+      <input type="hidden" id="start-date" name="start-date" value="{{startDate}}">
+      <input type="hidden" id="end-date" name="end-date" value="{{endDate}}">
+      <input type="hidden" id="guest-no" name="guest-no" value="{{guests}}">
+      {% if guests == "6" or guests == "5" or guests == "4" or guests == "3" or guests == "2" or guests == "1": %}
+        <label for="roomType"> Select Room Type:</label>
+        <select name="roomType" id="roomType">
+          <option value="Family">Family Room </option>
+      {% endif %}
+        
+      {% if guests == "2" or guests == "1": %}
+          <option value="Double"> Double Room </option>
+      {% endif %}
+
+      {% if guests == "1": %}
+          <option value="Standard">Standard Room</option>
+      {% endif %}
+    </select>
+    
     {% endif %}
   </ul>
 </nav>
 
 <div class="row centre">
   {% if ('Aberdeen',) in cities and availability[0] == 1: %}
-  <div class="col-4 col-s-4 aside">
-    <a href="{{ url_for('aberdeen') }}">
-      <img src="/static/img/cities/Aberdeen.jpeg" alt="Aberdeen" />
-      Aberdeen</a
-    >
+  <div class="col-4 col-s-4 aside city">
+    <img src="/static/img/cities/Aberdeen.jpeg" alt="Aberdeen" />
+    {% if date == True: %}
+      <input type="submit" value="Aberdeen" form="book" class="city" name="city">
+    {% else %}
+      <button>Aberdeen</button>
+    {% endif %}
   </div>
   {% endif %} {% if ('Belfast',) in cities and availability[1] == 1: %}
-  <div class="col-4 col-s-4 aside">
-    <a href="{{ url_for('belfast') }}">
-      <img src="/static/img/cities/Belfast.jpeg" alt="Belfast" />
-      Belfast</a
-    >
+  <div class="col-4 col-s-4 aside city">
+    <img src="/static/img/cities/Belfast.jpeg" alt="Belfast" />
+    {% if date == True: %}
+      <input type="submit" value="Belfast" form="book" class="city" name="city">
+    {% else %}
+      <button>Belfast</button>
+    {% endif %}
   </div>
   {% endif %} {% if ('Birmingham',) in cities and availability[2] == 1:  %}
-  <div class="col-4 col-s-4 aside">
-    <a href="{{ url_for('birmingham') }}">
+  <div class="col-4 col-s-4 aside city">
       <img src="/static/img/cities/Birmingham.jpeg" alt="Birmingham" />
-      Birmingham</a
-    >
+      {% if date == True: %}
+        <input type="submit" value="Birmingham" form="book" class="city" name="city">
+      {% else %}
+        <button>Birmingham</button>
+      {% endif %}
   </div>
   {% endif %} {% if ('Bristol',) in cities and availability[3] == 1:  %}
-  <div class="col-4 col-s-4 aside">
-    <a href="{{ url_for('bristol') }}">
+  <div class="col-4 col-s-4 aside city">
       <img src="/static/img/cities/Bristol.jpeg" alt="Bristol" />
-      Bristol</a
-    >
+      {% if date == True: %}
+        <input type="submit" value="Bristol" form="book" class="city" name="city">
+      {% else %}
+        <button>Bristol</button>
+      {% endif %}
   </div>
   {% endif %} {% if ('Cardiff',) in cities and availability[4] == 1:  %}
-  <div class="col-4 col-s-4 aside">
-    <a href="{{ url_for('cardiff') }}">
+  <div class="col-4 col-s-4 aside city">
       <img src="/static/img/cities/Cardiff.jpeg" alt="Cardiff" />
-      Cardiff</a
-    >
+      {% if date == True: %}
+        <input type="submit" value="Cardiff" form="book" class="city" name="city">
+      {% else %}
+        <button>Cardiff</button>
+      {% endif %}
   </div>
   {% endif %} {% if ('Edinburgh',) in cities and availability[5] == 1:  %}
-  <div class="col-4 col-s-4 aside">
-    <a href="{{ url_for('edinburgh') }}">
+  <div class="col-4 col-s-4 aside city">
       <img src="/static/img/cities/Edinburgh.jpeg" alt="Edinburgh" />
-      Edinburgh</a
-    >
+      {% if date == True: %}
+        <input type="submit" value="Edinburgh" form="book" class="city" name="city">
+      {% else %}
+        <button>Edinburgh</button>
+      {% endif %}
   </div>
   {% endif %} {% if ('Glasgow',) in cities and availability[6] == 1:  %}
-  <div class="col-4 col-s-4 aside">
-    <a href="{{ url_for('glasgow') }}">
+  <div class="col-4 col-s-4 aside city">
       <img src="/static/img/cities/Glasgow.jpeg" alt="Glasgow" />
-      Glasgow</a
-    >
+      {% if date == True: %}
+        <input type="submit" value="Glasgow" form="book" class="city" name="city">
+      {% else %}
+        <button>Glasgow</button>
+      {% endif %}
   </div>
   {% endif %} {% if ('London',) in cities and availability[7] == 1:  %}
-  <div class="col-4 col-s-4 aside">
-    <a href="{{ url_for('london') }}">
+  <div class="col-4 col-s-4 aside city">
       <img src="/static/img/cities/London.jpeg" alt="London" />
-      London</a
-    >
+      {% if date == True: %}
+        <input type="submit" value="London" form="book" class="city" name="city">
+      {% else %}
+        <button>London</button>
+      {% endif %}
   </div>
   {% endif %} {% if ('Manchester',) in cities and availability[8] == 1:  %}
-  <div class="col-4 col-s-4 aside">
-    <a href="{{ url_for('manchester') }}">
+  <div class="col-4 col-s-4 aside city">
       <img src="/static/img/cities/Manchester.jpeg" alt="Manchester" />
-      Manchester</a
-    >
+      {% if date == True: %}
+        <input type="submit" value="Manchester" form="book" class="city" name="city">
+      {% else %}
+        <button>Manchester</button>
+      {% endif %}
   </div>
   {% endif %} {% if ('Newcastle',) in cities and availability[9] == 1:  %}
-  <div class="col-4 col-s-4 aside">
-    <a href="{{ url_for('newcastle') }}l">
+  <div class="col-4 col-s-4 aside city">
       <img src="/static/img/cities/Newcastle.jpeg" alt="Newcastle" />
-      Newcastle</a
-    >
+      {% if date == True: %}
+        <input type="submit" value="Newcastle" form="book" class="city" name="city">
+      {% else %}
+        <button>Newcastle</button>
+      {% endif %}
   </div>
   {% endif %} {% if ('Norwich',) in cities and availability[10] == 1:  %}
-  <div class="col-4 col-s-4 aside">
-    <a href="{{ url_for('norwich') }}">
+  <div class="col-4 col-s-4 aside city">
       <img src="/static/img/cities/Norwich.jpeg" alt="Norwich" />
-      Norwich</a
-    >
+      {% if date == True: %}
+        <input type="submit" value="Norwich" form="book" class="city" name="city">
+      {% else %}
+        <button>Norwich</button>
+      {% endif %}
   </div>
   {% endif %} {% if ('Nottingham',) in cities and availability[11] == 1:  %}
-  <div class="col-4 col-s-4 aside">
-    <a href="{{ url_for('nottingham') }}">
+  <div class="col-4 col-s-4 aside city">
       <img src="/static/img/cities/Nottingham.jpeg" alt="Nottingham" />
-      Nottingham</a
-    >
+      {% if date == True: %}
+        <input type="submit" value="Nottingham" form="book" class="city" name="city">
+      {% else %}
+        <button>Nottingham</button>
+      {% endif %}
   </div>
   {% endif %} {% if ('Oxford',) in cities and availability[12] == 1:  %}
-  <div class="col-4 col-s-4 aside">
-    <a href="{{ url_for('oxford') }}">
+  <div class="col-4 col-s-4 aside city">
       <img src="/static/img/cities/Oxford.jpeg" alt="Oxford" />
-      Oxford</a
-    >
+      {% if date == True: %}
+        <input type="submit" value="Oxford" form="book" class="city" name="city">
+      {% else %}
+        <button>Oxford</button>
+      {% endif %}
   </div>
   {% endif %} {% if ('Plymouth',) in cities and availability[13] == 1:  %}
-  <div class="col-4 col-s-4 aside">
-    <a href="{{ url_for('plymouth') }}">
+  <div class="col-4 col-s-4 aside city">
       <img src="/static/img/cities/Plymouth.jpeg" alt="Plymouth" />
-      Plymouth</a
-    >
+      {% if date == True: %}
+        <input type="submit" value="Plymouth" form="book" class="city" name="city">
+      {% else %}
+        <button>Plymouth</button>
+      {% endif %}
   </div>
   {% endif %} {% if ('Swansea',) in cities and availability[14] == 1:  %}
-  <div class="col-4 col-s-4 aside">
-    <a href="{{ url_for('swansea') }}">
+  <div class="col-4 col-s-4 aside city">
       <img src="/static/img/cities/Swansea.jpeg" alt="Swansea" />
-      Swansea</a
-    >
+      {% if date == True: %}
+        <input type="submit" value="Swansea" form="book" class="city" name="city">
+      {% else %}
+        <button>Swansea</button>
+      {% endif %}
   </div>
   {% endif %}
 
-
+</form>
 </div>
 
   {% endblock %}

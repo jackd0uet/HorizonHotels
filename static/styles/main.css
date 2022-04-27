@@ -81,7 +81,7 @@ nav ul {
 }
 
 button {
-  padding: 10px;
+  padding: 1px;
   border: none;
   background-color: #3891a6;
   color: white;
@@ -322,5 +322,18 @@ li button {
 }
 
 li button:hover {
+  opacity: 1;
+}
+
+.city input {
+  background-color: #04AA6D;
+  color: white;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  cursor: pointer;
+  opacity: 0.9;
+}
+.city input:hover {
   opacity: 1;
 }
