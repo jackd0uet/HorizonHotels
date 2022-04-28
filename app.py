@@ -425,8 +425,6 @@ def myAccount():
         return render_template("error.html", error=error)
 
 # Modify booking route
-
-
 @app.route('/account/modify_booking/', methods=['POST', 'GET'])
 def modify():
     # Check form has been submitted.
@@ -468,8 +466,6 @@ def modify():
             return render_template("error.html", error=error)
 
 # Cancel booking route
-
-
 @app.route('/account/cancel_booking/', methods=['POST', 'GET'])
 def cancel():
     # Validate POST request
@@ -523,15 +519,11 @@ def cancel():
             return render_template("error.html", error=error)
 
 # No account route
-
-
 @app.route('/account/no_account/')
 def noAccount():
     return render_template('Account/no_account.html')
 
 # Account route
-
-
 @app.route('/account/')
 def account():
     # If user is admin redirect to admin hub else to regular user page
@@ -545,8 +537,6 @@ def account():
         return redirect(url_for('noAccount'))
 
 # Admin hub route
-
-
 @app.route('/account/adminHub/')
 def adminHub():
     # Connect to DB
@@ -570,6 +560,7 @@ def adminHub():
         error = "conn"
         return render_template("error.html", error=error)
 
+#Comments route
 @app.route('/account/comments/')
 def adminComments():
     # Connect to DB
