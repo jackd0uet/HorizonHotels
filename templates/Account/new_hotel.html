@@ -1,0 +1,61 @@
+{% extends 'base.html' %} {% block header %} {% endblock %} {% block title %}
+New Hotel{% endblock %} {% block content %} {% if session.get('userType') ==
+"ADMIN": %}
+
+<nav class="centre">
+    <ul class="aside">
+        <li><h2>Create a new hotel</h2></li>
+    </ul>
+</nav>
+
+<div class="row centre">
+    <div class="col-1 col-s-1"></div>
+    <div class="col-10 col-s-10 formAside">
+        <form action="/create-hotel-form/" class="form" id="createHotel" method="POST">
+            <div class="container">
+                <label for="city">Enter City:</label>
+                <input type="text" name="city" id="city" class="form" placeholder="Newport">
+                <br>
+                <label for="address">Enter Hotel Address: </label>
+                <input type="text" name="address" id="addresse" class="form" placeholder="NN18 0AB">
+                <br>
+                <label for="fare">Enter Standard Room Fare: </label>
+                <input type="number" name="fare" id="fare" class="form" placeholder="0" step="10" min="0">
+                <br>
+                <label for="offPeak">Enter Off-Peak Fare: </label>
+                <input type="number" name="offPeak" id="offPeak" class="form" placeholder="0" step="10" min="0">
+                <br>
+                <label for="rooms">Enter amount of rooms</label>
+                <input type="number" name="rooms" id="rooms" class="form" placeholder="0" step="10" min="0">
+                <div class="clearfix">
+                    <button form="createHotel" class="form" value="submit">Submit</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="col-1 col-s-1"></div>
+    </div>
+
+{% else: %}
+  <nav class="centre">
+    <ul class="aside">
+      <li>
+        <h2>
+          You do not have permission to view this page, please click the button
+          below to return to the homepage
+        </h2>
+      </li>
+      <li class="navbar">
+        <span
+          ><button
+            class="navbarButtons"
+            onclick="window.location.href='{{ url_for('index') }}';"
+          >
+            Return to homepage
+          </button></span
+        >
+      </li>
+    </ul>
+  </nav>
+  {% endif %} {% endblock %}
+</div>

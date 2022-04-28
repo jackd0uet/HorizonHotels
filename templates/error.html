@@ -27,6 +27,9 @@
         {% elif error == "value": %}
         <li><h2>The value you have entered is incorrect, please try again. (Ensure it is an int or float).</h2></li>
         <li class="navbar"><span><button class="navbarButtons" onclick="window.location.href='{{ url_for('adminHub') }}';">Return to Admin Hub</button></span></li>
+        {% elif error == "hotel": %}
+        <li><h2>Your new hotel has been successfully created, view it now from the Admin Hub.</h2></li>
+        <li class="navbar"><span><button class="navbarButtons" onclick="window.location.href='{{ url_for('adminHub') }}';">Return to Admin Hub</button></span></li>
         {% endif %}
         
     </ul>

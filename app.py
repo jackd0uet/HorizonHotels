@@ -1197,16 +1197,6 @@ def editFamily():
             error = "value"
             return render_template("error.html",error=error)
 
-# OTHER ROUTES YET TO BE COMPLETED.
-@app.route('/info/about/')
-def about():
-    return render_template('/Info/About.html')
-
-#Contact us route
-@app.route('/info/contact_us/')
-def contact():
-    return render_template('Info/Contact_us.html')
-
 @app.route('/comments/', methods=['POST', 'GET'])
 def comments():
     # Check request method
@@ -1244,6 +1234,98 @@ def comments():
             print("CANNOT CONNECT TO HH_DB")
             error = "conn"
             return render_template("error.html", error=error)
+
+@app.route('/new-hotel/')
+def createHotel():
+    return render_template('/Account/new_hotel.html')
+
+@app.route('/create-hotel-form/', methods=['POST', 'GET'])
+def createHotelForm():
+    # Check request method
+    if request.method == 'POST':
+        #Create variables from form
+        newCity = request.form['city']
+        newAdd = request.form['address']
+        standardFare = request.form['fare']
+        standardOffFare = request.form['offPeak']
+        roomsAmount = request.form['rooms']
+
+        standardFare = int(standardFare)
+        standardOffFare = int(standardOffFare)
+        roomsAmount = int(roomsAmount)
+
+        #Create other variables for adding into DB
+        amountStandardRooms = roomsAmount * .3
+        amountDoubleRooms = roomsAmount * .5
+        amountFamilyRooms = roomsAmount * .2
+
+        doubleFare = standardFare * 1.2
+        doubleOffFare = standardOffFare * 1.2
+
+        familyFare = standardFare * 1.5
+        familyOffFare = standardFare * 1.5
+
+        standardOccupancy = 1
+        doubleOccupancy = 2
+        familyOccupancy = 6
+
+        #Connect to DB
+        conn = dbfunc.getConnection()
+        if conn != None:
+            print("CONNECTED TO DATABASE: HH_DB")
+            dbcursor = conn.cursor()
+
+            #Insert standard rooms into DB
+            i=0
+            while i <= amountStandardRooms:
+                dbcursor.execute('INSERT INTO hotel (roomType, hotelCity, address, fare, offPeakFare, maxOccupancy)\
+                    VALUES (%s, %s, %s, %s, %s, %s);', ("Standard", newCity, newAdd, standardFare, standardOffFare, standardOccupancy ))
+                conn.commit()
+                i += 1
+
+            #Insert double rooms into DB    
+            i=0
+            while i <= amountDoubleRooms:
+                dbcursor.execute('INSERT INTO hotel (roomType, hotelCity, address, fare, offPeakFare, maxOccupancy)\
+                    VALUES (%s, %s, %s, %s, %s, %s);', ("Double", newCity, newAdd, doubleFare, doubleOffFare, doubleOccupancy ))
+                conn.commit()
+                i += 1
+
+            #Insert family rooms into DB
+            i=0
+            while i <= amountFamilyRooms:
+                dbcursor.execute('INSERT INTO hotel (roomType, hotelCity, address, fare, offPeakFare, maxOccupancy)\
+                    VALUES (%s, %s, %s, %s, %s, %s);', ("Family", newCity, newAdd, familyFare, familyOffFare, familyOccupancy ))
+                conn.commit()
+                i += 1
+
+            #Close connections and redirect user
+            dbcursor.close()
+            conn.close()
+            print("DISCONNECTED FROM HH_DB!")
+
+            error="hotel"
+            
+            return render_template("error.html", error=error)
+        
+        # Connection error handling.
+        else:
+            print("CANNOT CONNECT TO HH_DB")
+            error = "conn"
+            return render_template("error.html", error=error)
+                
+
+# OTHER ROUTES YET TO BE COMPLETED.
+@app.route('/info/about/')
+def about():
+    return render_template('/Info/About.html')
+
+#Contact us route
+@app.route('/info/contact_us/')
+def contact():
+    return render_template('Info/Contact_us.html')
+
+
 
 
 @app.route('/info/privacy/')
