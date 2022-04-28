@@ -763,9 +763,84 @@ def login():
             error = "login"
             return render_template("error.html", error=error)
 
+#Change password route
+@app.route('/change-password/')
+def changePassword():
+    return render_template('Account/change_password.html')
+
+#Change password form route
+@app.route('/change-password-form/', methods=['POST','GET'])
+def changePasswordForm():
+    #Collect variables from form
+    if request.method == 'POST':
+        oldPwd = request.form['currentPwd']
+        newPwd = request.form['newPwd']
+        confPwd = request.form['confPwd']
+        email = session.get('email')
+
+        #Check entered passwords match
+        if oldPwd != None and newPwd != None and confPwd != None:
+            if newPwd == confPwd:
+                conn = dbfunc.getConnection()
+                if conn != None:
+                    print("CONNECTED TO HH_DB!")
+                    dbcursor = conn.cursor()
+                    dbcursor.execute("SELECT password FROM customer WHERE email = %s;",
+                                    (email,))
+                    data = dbcursor.fetchone()
+                    conn.close()
+                    dbcursor.close()
+
+                    print(str(data[0]))
+                    print(oldPwd)
+
+                    if sha256_crypt.verify(oldPwd, str(data[0])):
+                        conn = dbfunc.getConnection()
+                        # If correct connect to DB.
+                        if conn != None:
+                            print("CONNECTED TO HH_DB!")
+                            dbcursor = conn.cursor()
+
+                            hashedPassword = sha256_crypt.hash((str(newPwd)))
+
+                            dbcursor.execute("UPDATE customer SET password = %s WHERE email = %s", (hashedPassword, email))
+                            conn.commit()
+                            print("User " + email + " has successfully updated their password!")
+                            conn.close()
+                            dbcursor.close()
+                            print("Disconnected from HH_DB")
+
+                            error = "passwordUpdate"
+                            return render_template("error.html", error=error)
+                        
+                        # Connection error handling
+                        else:
+                            print("CANNOT CONNECT TO HH_DB")
+                            error = "conn"
+                            return render_template("error.html", error=error)
+
+                    else:
+                        print("USER ENTERED PASSWORD INCORRECTLY WHEN TRYING TO CHANGE PASSWORD")
+                        error = "password"
+                        return render_template("error.html", error=error)
+
+                # Connection error handling
+                else:
+                    print("CANNOT CONNECT TO HH_DB")
+                    error = "conn"
+                    return render_template("error.html", error=error)
+
+            else:
+                print("Passwords do not match")
+                error = "match"
+                return render_template('error.html', error=error)
+        else:
+            print("NO details entered")
+            error = "login"
+            return render_template("error.html", error=error)
+
+
 # logout route
-
-
 @app.route('/account/my_account/logout/')
 def logout():
     # Get rid of all session variables and set logout to true.

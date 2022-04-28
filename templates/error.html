@@ -30,6 +30,15 @@
         {% elif error == "hotel": %}
         <li><h2>Your new hotel has been successfully created, view it now from the Admin Hub.</h2></li>
         <li class="navbar"><span><button class="navbarButtons" onclick="window.location.href='{{ url_for('adminHub') }}';">Return to Admin Hub</button></span></li>
+        {% elif error == "passwordUpdate": %}
+        <li><h2>Your password has been successfully changed, press the button below to return myAccount.</h2></li>
+        <li class="navbar"><span><button class="navbarButtons" onclick="window.location.href='{{ url_for('myAccount') }}';">Return to myAccount</button></span></li>
+        {% elif error == "password": %}
+        <li><h2>The password you have entered is incorrect please try again</h2></li>
+        <li class="navbar"><span><button class="navbarButtons" onclick="window.location.href='{{ url_for('changePassword') }}';">Return to Change Password</button></span></li>
+        {% elif error == "match": %}
+        <li><h2>The two new passwords entered do not match, please try again.</h2></li>
+        <li class="navbar"><span><button class="navbarButtons" onclick="window.location.href='{{ url_for('changePassword') }}';">Return to Change Password</button></span></li>
         {% endif %}
         
     </ul>
