@@ -5,6 +5,7 @@ New Hotel{% endblock %} {% block content %} {% if session.get('userType') ==
 <nav class="centre">
     <ul class="aside">
         <li><h2>Create a new hotel</h2></li>
+        <li class="navbar"><span><button class="navbarButtons" onclick="window.location.href='{{ url_for('adminHub') }}';">Return to Admin Hub</button></span></li>
     </ul>
 </nav>
 

@@ -17,6 +17,7 @@ import dbfunc
 import mysql.connector
 import gc
 import hashlib
+from dateutil.relativedelta import relativedelta
 
 
 # Setup flask app
@@ -1313,7 +1314,49 @@ def createHotelForm():
             print("CANNOT CONNECT TO HH_DB")
             error = "conn"
             return render_template("error.html", error=error)
-                
+
+@app.route('/account/next-month/')
+def nextMonth():
+    #Create variables for the next month
+    today = date.today()
+    monthToday = today + relativedelta(months=1)
+    nextMonth = monthToday.month
+    thisYear = today.year
+    startOfMonth = datetime(thisYear, nextMonth, 1)
+
+    if nextMonth == 1 or nextMonth == 3 or nextMonth == 5 or nextMonth == 7 or nextMonth == 8 or nextMonth == 10 or nextMonth == 12:
+        endOfMonth = datetime(thisYear, nextMonth, 31)
+    elif nextMonth == 4 or nextMonth == 6 or nextMonth == 9 or nextMonth == 11:
+        endOfMonth = datetime(thisYear, nextMonth, 30)
+    else:
+        endOfMonth = datetime(thisYear, nextMonth, 28)
+
+    startOfMonth = startOfMonth.date()
+    endOfMonth = endOfMonth.date()
+
+    print(startOfMonth)
+    print(endOfMonth)
+
+    #Connect to DB
+    conn = dbfunc.getConnection()
+    if conn != None:
+        print("CONNECTED TO DATABASE: HH_DB")
+        dbcursor = conn.cursor()
+        #Get all bookings from that month
+        dbcursor.execute("SELECT * FROM fullbookinginfo WHERE startDate BETWEEN %s AND %s;", (startOfMonth, endOfMonth ))
+        rows = dbcursor.fetchall()
+        datarows = []
+        for row in rows:
+            data = list(row)
+            datarows.append(data)
+
+        return render_template('Account/months_report.html', bookingData=datarows, month = startOfMonth)
+
+    # Connection error handling.
+    else:
+        print("CANNOT CONNECT TO HH_DB")
+        error = "conn"
+        return render_template("error.html", error=error)
 
 # OTHER ROUTES YET TO BE COMPLETED.
 @app.route('/info/about/')

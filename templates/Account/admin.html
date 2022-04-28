@@ -36,6 +36,16 @@ Admin Hub{% endblock %} {% block content %} {% if session.get('userType') ==
           </button></span
         >
       </li>
+      <li class="navbar">
+        <span
+          ><button
+            class="navbarButtons"
+            onclick="window.location.href='{{ url_for('nextMonth') }}';"
+          >
+            Next Month's bookings
+          </button></span
+        >
+      </li>
     {% else %}
     <li class="navbar">
       <span
