@@ -231,3 +231,10 @@ primary key(commentNo) );
 drop table comments;
 select * from comments;
 INSERT INTO comments(fName, lName, email, comments) VALUES ('John', 'Smith', 'test', 'test');
+
+SELECT DISTINCT FROM hotel WHERE hotelCity = 'Aberdeen';
+
+Select * FROM hotel WHERE hotelCity = 'Hereford';
+
+UPDATE hotel SET address = "AB13 0AB" WHERE hotelCity = "Aberdeen" and roomId = 1;
+
