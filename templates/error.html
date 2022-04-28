@@ -21,6 +21,12 @@
         {% elif error == "comment": %}
         <li><h2>Your comment has been received, we will review it in the next 3 business days and get back to you as soon as possible.</h2></li>
         <li class="navbar"><span><button class="navbarButtons" onclick="window.location.href='{{ url_for('index') }}';">Return to homepage</button></span></li>    
+        {% elif error == "update": %}
+        <li><h2>Your selected hotel has been updated, please refer back to previous page to view update.</h2></li>
+        <li class="navbar"><span><button class="navbarButtons" onclick="window.location.href='{{ url_for('adminHub') }}';">Return to Admin Hub</button></span></li>
+        {% elif error == "value": %}
+        <li><h2>The value you have entered is incorrect, please try again. (Ensure it is an int or float).</h2></li>
+        <li class="navbar"><span><button class="navbarButtons" onclick="window.location.href='{{ url_for('adminHub') }}';">Return to Admin Hub</button></span></li>
         {% endif %}
         
     </ul>

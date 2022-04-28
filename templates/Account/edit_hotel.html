@@ -1,0 +1,155 @@
+{% extends 'base.html' %} {% block header %} {% endblock %} {% block content %}
+{% if session.get('userType') == "ADMIN": %}
+<nav class="centre">
+  <ul class="aside">
+    <li><h2>Edit Hotel</h2></li>
+    <li><h3>You have selected to edit {{hotel}}</h3></li>
+  </ul>
+</nav>
+
+<div class="row centre">
+  <div class="col-1 col-s-1"></div>
+
+  <div class="col-10 col-s-10">
+    <table class="centre">
+      <tr>
+        <th>Current Settings</th>
+        <th>Address</th>
+        <th>Standard Room Fare</th>
+        <th>Standard Room Off-Peak Fare</th>
+        <th>Standard Room Occupancy Limit</th>
+        <th>Double Room Fare</th>
+        <th>Double Room Off-Peak Fare</th>
+        <th>Double Room Occupancy Limit</th>
+        <th>Family Room Fare</th>
+        <th>Family Room Off-Peak Fare</th>
+        <th>Family Room Occupancy Limit</th>
+      </tr>
+      <tr>
+        <td></td>
+        <td>{{hotelData[3]}}</td>
+        <td>{{hotelData[4]}}</td>
+        <td>{{hotelData[5]}}</td>
+        <td>{{hotelData[6]}}</td>
+        <td>{{hotelData[7]}}</td>
+        <td>{{hotelData[8]}}</td>
+        <td>{{hotelData[9]}}</td>
+        <td>{{hotelData[10]}}</td>
+        <td>{{hotelData[11]}}</td>
+        <td>{{hotelData[12]}}</td>
+      </tr>
+    </table>
+  </div>
+    <div class="col-1 col-s-1"></div>
+    </div>
+
+    <div class="row centre">
+    <div class="col-2 col-s-2" ></div>
+      <div class="col-2 col-s-2 formAside" style="margin:1px;">
+        <form action="/edit-hotel/" class="form" method="POST" id="editHotel">
+          <div class="container">
+              <label for="address">Edit address</label>
+              <input type="text" name="address" id="address" class="form" placeholder="{{hotelData[3]}}">
+              <br>
+              <input type="hidden" name="hotel" id="hotel" value="{{hotel}}">
+              <div class="clearfix">
+              <button form="editHotel" class="form" value="submit">
+                Submit
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <div class="col-2 col-s-2 formAside" style="margin:1px;">
+        <form action="/edit-hotel-standard/" class="form" method="POST" id="editHotelStandard">
+            <div class="container">
+                <label for="standardFare">Standard Fare: </label>
+                <input type="text" name="standardFare" id="standardFare" class="form" placeholder="{{hotelData[4]}}">
+                <br>
+                <label for="standardOffFare">Standard Off-Peak Fare: </label>
+                <input type="text" name="standardOffFare" id="standardOffFare" class="form" placeholder="{{hotelData[5]}}">
+                <br>
+                <label for="standardOccupancy">Standard Occupancy: </label>
+                <input type="number" name="standardOccupancy" id="standardOccupancy" class="form" placeholder="{{hotelData[6]}}">
+                <br>
+                <input type="hidden" name="hotel" id="hotel" value="{{hotel}}">
+                <div class="clearfix">
+                    <button form="editHotelStandard" class="form" value="submit">
+                      Submit
+                    </button>
+                  </div>
+            </div>
+        </form>
+        </div>
+
+        <div class="col-2 col-s-2 formAside" style="margin:1px;">
+            <form action="/edit-hotel-double/" class="form" method="POST" id="editHotelDouble">
+                <div class="container">
+                    <label for="doubleFare">Double Fare: </label>
+                    <input type="text" name="doubleFare" id="doubleFare" class="form" placeholder="{{hotelData[7]}}">
+                    <br>
+                    <label for="doubleOffFare">Double Off-Peak Fare: </label>
+                    <input type="text" name="doubleOffFare" id="doubleOffFare" class="form" placeholder="{{hotelData[8]}}">
+                    <br>
+                    <label for="doubleOccupancy">Standard Occupancy: </label>
+                    <input type="number" name="doubleOccupancy" id="doubleOccupancy" class="form" placeholder="{{hotelData[9]}}">
+                    <br>
+                    <input type="hidden" name="hotel" id="hotel" value="{{hotel}}">
+                    <div class="clearfix">
+                        <button form="editHotelDouble" class="form" value="submit">
+                          Submit
+                        </button>
+                      </div>
+                </div>
+            </form>
+            </div>
+
+            <div class="col-2 col-s-2 formAside" style="margin:1px;">
+                <form action="/edit-hotel-family/" class="form" method="POST" id="editHotelFamily">
+                    <div class="container">
+                        <label for="familyFare">Family Fare: </label>
+                        <input type="text" name="familyFare" id="familyFare" class="form" placeholder="{{hotelData[10]}}">
+                        <br>
+                        <label for="familyOffFare">Family Off-Peak Fare: </label>
+                        <input type="text" name="familyOffFare" id="familyOffFare" class="form" placeholder="{{hotelData[11]}}">
+                        <br>
+                        <label for="familyOccupancy">Family Occupancy: </label>
+                        <input type="number" name="familyOccupancy" id="familyOccupancy" class="form" placeholder="{{hotelData[12]}}">
+                        <br>
+                        <input type="hidden" name="hotel" id="hotel" value="{{hotel}}">
+                        <div class="clearfix">
+                            <button form="editHotelFamily" class="form" value="submit">
+                              Submit
+                            </button>
+                          </div>
+                    </div>
+                </form>
+                </div>
+
+            <div class="col-2 col-s-2" ></div>
+
+    </div>   
+  {% else: %}
+  <nav class="centre">
+    <ul class="aside">
+      <li>
+        <h2>
+          You do not have permission to view this page, please click the button
+          below to return to the homepage
+        </h2>
+      </li>
+      <li class="navbar">
+        <span
+          ><button
+            class="navbarButtons"
+            onclick="window.location.href='{{ url_for('index') }}';"
+          >
+            Return to homepage
+          </button></span
+        >
+      </li>
+    </ul>
+  </nav>
+  {% endif %} {% endblock %}
+</div>

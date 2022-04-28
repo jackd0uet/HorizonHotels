@@ -986,7 +986,216 @@ def booking_confirm():
             error = "conn"
             return render_template("error.html", error=error)
 
+@app.route('/hotel-selection/', methods=['POST', 'GET'])
+def hotelSel():
+    # Check POST request
+    if request.method == 'POST':
+        #Pull hotel variable from form
+        hotelSelected = request.form['hotel']
 
+        # Connect to DB
+        conn = dbfunc.getConnection()
+
+        # Check DB connection
+        if conn != None:
+            print("CONNECTED TO DATABASE: HH_DB")
+            dbcursor = conn.cursor()
+
+            #Collect all data about the selected hotel.
+            dataRows = []
+            dbcursor.execute('SELECT * FROM hotel WHERE hotelCity = %s and roomType = "Standard";', (hotelSelected, ))
+            rows = dbcursor.fetchall()
+            for row in rows:
+                data = list(row)
+                dataRows.append(data)
+            hotelData = dataRows[0]
+
+            doubleDataRows = []
+            dbcursor.execute('SELECT fare, offPeakFare, maxOccupancy FROM hotel WHERE hotelCity = %s and roomType = "Double";', (hotelSelected, ))
+            doubleRows = dbcursor.fetchall()
+            for row in doubleRows:
+                dataDouble = list(row)
+                doubleDataRows.append(dataDouble)
+            doubleData = doubleDataRows[0]
+
+            familyDataRows = []
+            dbcursor.execute('SELECT fare, offPeakFare, maxOccupancy FROM hotel WHERE hotelCity = %s and roomType = "Family";', (hotelSelected, ))
+            familyRows = dbcursor.fetchall()
+            for row in familyRows:
+                dataFamily = list(row)
+                familyDataRows.append(dataFamily)
+            familyData = familyDataRows[0]
+
+            for row in doubleData:
+                hotelData.append(row)
+            
+            for row in familyData:
+                hotelData.append(row)
+
+            # Close DB connection.
+            dbcursor.close()
+            conn.close()
+            print("DISCONNECTED FROM HH_DB!")
+
+            session['hotelData'] = hotelData
+
+            return render_template('Account/edit_hotel.html', hotelData=hotelData, hotel=hotelData[2])
+
+        # Connection error handling.
+        else:
+            print("CANNOT CONNECT TO HH_DB")
+            error = "conn"
+            return render_template("error.html", error=error)
+
+@app.route('/edit-hotel/', methods=['POST','GET'])
+def editHotel():
+    # Check POST request
+    if request.method == 'POST':
+        newAddress = request.form['address']
+        hotel = request.form['hotel']
+
+        # Connect to DB
+        conn = dbfunc.getConnection()
+
+        # Check DB connection
+        if conn != None:
+            print("CONNECTED TO DATABASE: HH_DB")
+            dbcursor = conn.cursor()
+
+            #Change address
+            dbcursor.execute("UPDATE hotel SET address = %s WHERE hotelCity = %s", (newAddress, hotel ))
+            conn.commit()
+            print(hotel + " address changed to " + newAddress)
+            dbcursor.close()
+            conn.close()
+            print("DISCONNECTED FROM HH_DB!")
+
+            error="update"
+            return render_template('error.html', error=error)
+
+        # Connection error handling
+        else:
+            print("CANNOT CONNECT TO HH_DB")
+            error = "conn"
+            return render_template("error.html", error=error)
+
+@app.route('/edit-hotel-standard/', methods=['POST','GET'])
+def editStandard():
+    # Check POST request
+    if request.method == 'POST':
+        newStandardFare = request.form['standardFare']
+        newStandardOffFare = request.form['standardOffFare']
+        newStandardOccupancy = request.form['standardOccupancy']
+        hotel = request.form['hotel']
+
+        try:
+            newStandardFare = float(newStandardFare)
+            newStandardOffFare = float(newStandardOffFare)
+
+            # Connect to DB
+            conn = dbfunc.getConnection()
+
+            #Update selected hotel with new prices and occupancy
+            
+            # Check DB connection
+            if conn != None:
+                print("CONNECTED TO DATABASE: HH_DB")
+                dbcursor = conn.cursor()
+
+                dbcursor.execute('UPDATE hotel SET fare = %s, offPeakFare = %s, maxOccupancy = %s WHERE hotelCity = %s and roomType = "Standard";', (newStandardFare, newStandardOffFare, newStandardOccupancy, hotel))
+                conn.commit()
+
+                print(hotel + " updated to have a new standard fare, standard offpeak fare and standard occupancy " + str(newStandardFare), str(newStandardOffFare), newStandardOccupancy)
+                dbcursor.close()
+                conn.close()
+                print("DISCONNECTED FROM HH_DB!")
+
+                error="update"
+                return render_template('error.html', error=error)
+            
+
+        except ValueError:
+            error = "value"
+            return render_template("error.html",error=error)
+
+
+@app.route('/edit-hotel-double/', methods=['POST','GET'])
+def editDouble():
+    # Check POST request
+    if request.method == 'POST':
+        newDoubleFare = request.form['doubleFare']
+        newDoubleOffFare = request.form['doubleOffFare']
+        newDoubleOccupancy = request.form['doubleOccupancy']
+        hotel = request.form['hotel']
+
+        try:
+            newDoubleFare = float(newDoubleFare)
+            newDoubleOffFare = float(newDoubleOffFare)
+
+            # Connect to DB
+            conn = dbfunc.getConnection()
+
+            #Update selected hotel with new prices and occupancy
+            
+            # Check DB connection
+            if conn != None:
+                print("CONNECTED TO DATABASE: HH_DB")
+                dbcursor = conn.cursor()
+
+                dbcursor.execute('UPDATE hotel SET fare = %s, offPeakFare = %s, maxOccupancy = %s WHERE hotelCity = %s and roomType = "Double";', (newDoubleFare, newDoubleOffFare, newDoubleOccupancy, hotel))
+                conn.commit()
+
+                print(hotel + " updated to have a new double fare, double offpeak fare and double occupancy " + str(newDoubleFare), str(newDoubleOffFare), newDoubleOccupancy)
+                dbcursor.close()
+                conn.close()
+                print("DISCONNECTED FROM HH_DB!")
+
+                error="update"
+                return render_template('error.html', error=error)
+            
+
+        except ValueError:
+            error = "value"
+            return render_template("error.html",error=error)
+
+@app.route('/edit-hotel-family/', methods=['POST','GET'])
+def editFamily():
+    # Check POST request
+    if request.method == 'POST':
+        newFamilyFare = request.form['familyFare']
+        newFamilyOffFare = request.form['familyOffFare']
+        newFamilyOccupancy = request.form['familyOccupancy']
+        hotel = request.form['hotel']
+
+        try:
+            newFamilyFare = float(newFamilyFare)
+            newFamilyOffFare = float(newFamilyOffFare)
+
+            # Connect to DB
+            conn = dbfunc.getConnection()
+
+            #Update selected hotel with new prices and occupancy
+            
+            # Check DB connection
+            if conn != None:
+                print("CONNECTED TO DATABASE: HH_DB")
+                dbcursor = conn.cursor()
+
+                dbcursor.execute('UPDATE hotel SET fare = %s, offPeakFare = %s, maxOccupancy = %s WHERE hotelCity = %s and roomType = "Family";', (newFamilyFare, newFamilyOffFare, newFamilyOccupancy, hotel))
+                conn.commit()
+
+                print(hotel + " updated to have a new family fare, family offpeak fare and family occupancy " + str(newFamilyFare), str(newFamilyOffFare), newFamilyOccupancy)
+                dbcursor.close()
+                conn.close()
+                print("DISCONNECTED FROM HH_DB!")
+
+                error="update"
+                return render_template('error.html', error=error)
+            
+
+        except ValueError:
+            error = "value"
+            return render_template("error.html",error=error)
 
 # OTHER ROUTES YET TO BE COMPLETED.
 @app.route('/info/about/')

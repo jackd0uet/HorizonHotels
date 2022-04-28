@@ -1,59 +1,118 @@
 {% extends 'base.html' %} {% block header %} {% endblock %} {% block title %}
-Admin Hub{% endblock %} {% block content %} 
+Admin Hub{% endblock %} {% block content %} {% if session.get('userType') ==
+"ADMIN": %}
+<nav class="centre">
+  <ul>
+    {% if "logged_in" in session: %}
+    <li><h2>Hello {{session['name']}}! What can we do for you today?</h2></li>
+    <li>
+      <span
+        ><a href="{{  url_for('index') }}"></a
+        ><button
+          class="navbarButtons"
+          onclick="window.location.href='{{ url_for('logout') }}';"
+        >
+          Log out
+        </button></span
+      >
+    </li>
+    {% else %}
+    <li class="navbar">
+      <span
+        ><button class="navbarButtons" onclick="window.location.href='login';">
+          Log In
+        </button></span
+      >
+    </li>
+    <li class="navbar">
+      <span
+        ><button class="navbarButtons" onclick="window.location.href='signup';">
+          Sign Up
+        </button></span
+      >
+    </li>
+    {% endif %}
+    <li class="navbar">
+      <span
+        ><button
+          class="navbarButtons"
+          onclick="window.location.href='{{ url_for('adminComments') }}';"
+        >
+          Check Comments
+        </button></span
+      >
+    </li>
+  </ul>
+</nav>
 
-{% if session.get('userType') == "ADMIN": %}
-    <nav class="centre">
-        <ul>
-        {% if "logged_in" in session: %}
-            <li><h2>Hello {{session['name']}}! What can we do for you today?</h2></li>
-            <li><span><a href="{{  url_for('index') }}"></a><button class="navbarButtons" onclick="window.location.href='{{ url_for('logout') }}';">Log out</button></span></li>
-        {% else %}
-            <li class="navbar"><span><button class="navbarButtons" onclick="window.location.href='login';">Log In</button></span></li>
-            <li class="navbar"><span><button class="navbarButtons" onclick="window.location.href='signup';">Sign Up</button></span></li>
-        {% endif %}
-        <li class="navbar"><span><button class="navbarButtons" onclick="window.location.href='{{ url_for('adminComments') }}';">Check Comments</button></span></li> 
-        </ul>
-        </nav>
+<div class="row centre">
+  <div class="col-1 col-s-1"></div>
 
-        <div class="row centre">
-            <div class="col-1 col-s-1"></div>
+  <div class="col-10 col-s-10 formAside">
+    <h3>Check bookings within a date range</h3>
+    <form action="/check-bookings/" class="form" id="check" method="POST">
+      <div class="container">
+        <label for="startDate">Start Date: </label>
+        <input type="date" name="startDate" id="startDate" class="form" />
+        <br />
 
-            <div class="col-10 col-s-10 aside">
-                <h3>Check bookings within a date range</h3>
-                <form action="/check-bookings/" class="form" id="check" method="POST">
-                    <div class="container">
-                        <label for="startDate">Start Date: </label>
-                        <input type="date" name="startDate" id="startDate" class="form">
-                        <br />
+        <label for="endDate">End Date: </label>
+        <input type="date" name="endDate" id="endDate" class="form" />
+        <br />
 
-                        <label for="endDate">End Date: </label>
-                        <input type="date" name="endDate" id="endDate" class="form">
-                        <br />
+        <label for="hotel">Hotel: </label>
+        <select name="hotel" id="hotel" class="form">
+          {% for city in citiesData: %}
+          <option value="{{city[0]}}">{{city[0]}}</option>
+          {% endfor %}
+        </select>
 
-                        <label for="hotel">Hotel: </label>
-                        <select name="hotel" id="hotel" class="form">
-                            {% for city in citiesData: %}
-                                <option value="{{city[0]}}">{{city[0]}}</option>
-                            {% endfor %}
-                        </select>
-
-                        <div class="clearfix">
-                            <button form="check" class="form" value="submit">Submit</button>
-                        </div>
-                    </div>
-                </form>
-            </div>
-            <div class="col-1 col-s-1"></div>
+        <div class="clearfix">
+          <button form="check" class="form" value="submit">Submit</button>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="row centre">
+    <div class="col-1 col-s-1"></div>
+    <div class="col-10 col-s-10 formAside">
+      <h3>      Edit a hotel        </h3>
+      <form action="/hotel-selection/" class="form" id="hotelSel" method="POST">
+        <div class="container">
+          <label for="hotel">Select hotel: </label>
+          <select name="hotel" id="hotel" class="form">
+            {% for city in citiesData: %}
+            <option value="{{city[0]}}">{{city[0]}}</option>
+            {% endfor %}
+          </select>
+          <div class="clearfix">
+            <button form="hotelSel" class="form" value="submit">Submit</button>
+          </div>
+        </div>
+      </form>
     </div>
-
-{% else: %}
-    <nav class="centre">
-        <ul class="aside">
-            <li><h2>You do not have permission to view this page, please click the button below to return to the homepage</h2></li>
-            <li class="navbar"><span><button class="navbarButtons" onclick="window.location.href='{{ url_for('index') }}';">Return to homepage</button></span></li>
-        </ul>
-    </nav>
-{% endif %}
-
-
-{% endblock %}
+    <div class="col-1 col-s-1"></div>
+  </div>
+  {% else: %}
+  <nav class="centre">
+    <ul class="aside">
+      <li>
+        <h2>
+          You do not have permission to view this page, please click the button
+          below to return to the homepage
+        </h2>
+      </li>
+      <li class="navbar">
+        <span
+          ><button
+            class="navbarButtons"
+            onclick="window.location.href='{{ url_for('index') }}';"
+          >
+            Return to homepage
+          </button></span
+        >
+      </li>
+    </ul>
+  </nav>
+  {% endif %} {% endblock %}
+</div>
