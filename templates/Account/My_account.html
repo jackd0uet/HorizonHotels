@@ -5,11 +5,6 @@
 
 {% block content %}
 
-<script>
-  function logoutFunc() {
-    alert("You have successfully logged out!");
-  }
-</script>
 
 <nav class="centre">
 <ul>
@@ -24,11 +19,6 @@
 </ul>
 </nav>
 
-{% if logout: %}
-  <script>
-      window.onload = logoutFunc();
-  </script>
-{% endif %}
 <div class="row centre">
   <div class="col-1 col-s-1"></div>
   <div class="col-10 col-s-10"> 

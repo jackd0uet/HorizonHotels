@@ -868,6 +868,8 @@ def booking():
                         fare = fare + \
                             ((int(row[4]) * int(totalNights.days)))
                         fare = fare * discount
+                        fare = "{:.2f}".format(fare)
+                        fare = float(fare)
                         peakStatus = True
                     else:
                         if room == "Double" and int(noOfGuests) > 1:
@@ -878,6 +880,8 @@ def booking():
                         fare = doubleIncrease + \
                             ((int(row[5]) * int(totalNights.days)))
                         fare = fare * discount
+                        fare = "{:.2f}".format(fare)
+                        fare = float(fare)
                         peakStatus = False
 
                     # Work out fare in other currencies
@@ -885,6 +889,7 @@ def booking():
                     fareUSD = fare * 1.6
 
                     # Append fares to booking data
+
                     data.append(fare)
                     data.append(fareEuros)
                     data.append(fareUSD)
