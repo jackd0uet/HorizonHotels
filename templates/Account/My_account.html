@@ -44,6 +44,7 @@
   {% if bookedCount >= 1: %}  
     <h2>My Bookings:</h2>
     <form action="/account/modify_booking/" method="POST">
+      <div class="overFlow">
     <table>
       <tr>    
         <th>Booking ID</th>
@@ -74,6 +75,7 @@
       </tr>  
     {% endfor %}
     </table>
+  </div>
     <input type="submit" value="Edit Selected booking!">
     </form>
   {% else: %}
@@ -86,6 +88,7 @@
   {% endif %}
   {% if cancelledCount > 0: %}
     <h2>Cancelled Bookings:</h2>
+    <div class="overFlow">
     <table>
       <tr>
         <th>Booking ID</th>
@@ -113,6 +116,7 @@
       </tr>
       {% endfor %}
     </table>
+  </div>
   {% endif %}
 
 </div>

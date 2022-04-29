@@ -1,45 +1,68 @@
 {% extends 'base.html' %} {% block header %} {% endblock %} {% block content %}
 {% if session.get('userType') == "ADMIN": %}
-    <nav class="centre">
-        <ul class="aside">
-            <li><h2>All comments</h2></li>
-            <li class="navbar"><span><button class="navbarButtons" onclick="window.location.href='{{ url_for('adminHub') }}';">Return to Admin Hub</button></span></li>
-        </ul>
-    </nav>
+<nav class="centre">
+  <ul class="aside">
+    <li><h2>All comments</h2></li>
+    <li class="navbar">
+      <span
+        ><button
+          class="navbarButtons"
+          onclick="window.location.href='{{ url_for('adminHub') }}';"
+        >
+          Return to Admin Hub
+        </button></span
+      >
+    </li>
+  </ul>
+</nav>
 
-    <div class="row centre">
-        <div class="col-1 col-s-1"></div>
-        <div class="col-10 col-s-10">
-        <table class="centre">
-            <tr>
-                <th>Comment Number</th>
-                <th>First Name</th>
-                <th>Last Name</th>
-                <th>Email</th>
-                <th>Comment</th>
-                <th>Time Left</th>
-            </tr>
-            {% for row in commentsData: %}
-            <tr>     
-                <td>{{row[0]}}</td>
-                <td>{{row[1]}}</td>
-                <td>{{row[2]}}</td>
-                <td>{{row[3]}}</td>
-                <td>{{row[4]}}</td>
-                <td>{{row[5]}}</td>
-            </tr>
-            {% endfor %}
-        </table>
-        </div>
-        <div class="col-1 col-s-1"></div>
+<div class="row centre">
+  <div class="col-1 col-s-1"></div>
+  <div class="col-10 col-s-10">
+    <div class="overFlow">
+      <table class="centre">
+        <tr>
+          <th>Comment Number</th>
+          <th>First Name</th>
+          <th>Last Name</th>
+          <th>Email</th>
+          <th>Comment</th>
+          <th>Time Left</th>
+        </tr>
+        {% for row in commentsData: %}
+        <tr>
+          <td>{{row[0]}}</td>
+          <td>{{row[1]}}</td>
+          <td>{{row[2]}}</td>
+          <td>{{row[3]}}</td>
+          <td>{{row[4]}}</td>
+          <td>{{row[5]}}</td>
+        </tr>
+        {% endfor %}
+      </table>
     </div>
+  </div>
+  <div class="col-1 col-s-1"></div>
+</div>
 {% else: %}
-    <nav class="centre">
-        <ul class="aside">
-            <li><h2>You do not have permission to view this page, please click the button below to return to the homepage</h2></li>
-            <li class="navbar"><span><button class="navbarButtons" onclick="window.location.href='{{ url_for('index') }}';">Return to homepage</button></span></li>
-        </ul>
-    </nav>
-{% endif %}
-
-{% endblock %}
+<nav class="centre">
+  <ul class="aside">
+    <li>
+      <h2>
+        You do not have permission to view this page, please click the button
+        below to return to the homepage
+      </h2>
+    </li>
+    <li class="navbar">
+      <span
+        ><button
+          class="navbarButtons"
+          onclick="window.location.href='{{ url_for('index') }}';"
+        >
+          Return to homepage
+        </button></span
+      >
+    </li>
+  </ul>
+</nav>
+{% endif %} {% endblock %}

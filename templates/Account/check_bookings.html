@@ -2,16 +2,25 @@
 {% if session.get('userType') == "ADMIN": %}
 <nav class="centre">
   <ul class="aside">
-      <li><h2>All Bookings:</h2></li>
-      <li class="navbar"><span><button class="navbarButtons" onclick="window.location.href='{{ url_for('adminHub') }}';">Return to Admin Hub</button></span></li>
+    <li><h2>All Bookings:</h2></li>
+    <li class="navbar">
+      <span
+        ><button
+          class="navbarButtons"
+          onclick="window.location.href='{{ url_for('adminHub') }}';"
+        >
+          Return to Admin Hub
+        </button></span
+      >
+    </li>
   </ul>
-</nav>  
-
+</nav>
 
 <div class="row centre">
-    <div class="col-1 col-s-1"></div>
-    <div class="col-10 col-s-10">
-      <form action="/account/modify_booking/" method="POST">
+  <div class="col-1 col-s-1"></div>
+  <div class="col-10 col-s-10">
+    <form action="/account/modify_booking/" method="POST">
+      <div class="overFlow">
         <table class="centre">
           <tr>
             <th>Booking ID</th>
@@ -54,18 +63,31 @@
           </tr>
           {% endfor %}
         </table>
-        <input type="submit" value="Edit Selected booking!" />
-      </form>
-    </div>
-    <div class="col-1 col-s-1"></div>
+      </div>
+      <input type="submit" value="Edit Selected booking!" />
+    </form>
   </div>
+  <div class="col-1 col-s-1"></div>
+</div>
 {% else: %}
-  <nav class="centre">
-      <ul class="aside">
-          <li><h2>You do not have permission to view this page, please click the button below to return to the homepage</h2></li>
-          <li class="navbar"><span><button class="navbarButtons" onclick="window.location.href='{{ url_for('index') }}';">Return to homepage</button></span></li>
-      </ul>
-  </nav>
-{% endif %}
-
-{% endblock %}
+<nav class="centre">
+  <ul class="aside">
+    <li>
+      <h2>
+        You do not have permission to view this page, please click the button
+        below to return to the homepage
+      </h2>
+    </li>
+    <li class="navbar">
+      <span
+        ><button
+          class="navbarButtons"
+          onclick="window.location.href='{{ url_for('index') }}';"
+        >
+          Return to homepage
+        </button></span
+      >
+    </li>
+  </ul>
+</nav>
+{% endif %} {% endblock %}
