@@ -395,7 +395,7 @@ def myAccount():
 
         # Select all cancelled bookings for customer whose ID is provided using session variable.
         dbcursor.execute(
-            "SELECT * FROM cancelledBookings WHERE customerId = %s", (session.get('userId'), ))
+            "SELECT * FROM cancelledbookings WHERE customerId = %s", (session.get('userId'), ))
         rowsTwo = dbcursor.fetchall()
         dataRowsTwo = []
 
@@ -405,7 +405,7 @@ def myAccount():
 
         # Count the amount of cancelled bookings.
         dbcursor.execute(
-            "SELECT COUNT(*) FROM cancelledBookings WHERE customerId = %s", (session.get('userId'), ))
+            "SELECT COUNT(*) FROM cancelledbookings WHERE customerId = %s", (session.get('userId'), ))
         cancelledCount = dbcursor.fetchone()[0]
 
         # Close connection.
@@ -500,7 +500,7 @@ def cancel():
             dbcursor = conn.cursor()
 
             # Create new record in cancelledBookings table and delete booking from bookings table.
-            dbcursor.execute("INSERT INTO cancelledBookings (bookingId, customerId, roomId, dateBooked, \
+            dbcursor.execute("INSERT INTO cancelledbookings (bookingId, customerId, roomId, dateBooked, \
             startDate, endDate, dateCancelled, guests, totalFare, totalRefunded, currency) \
             VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);", (bookingId, customerId, roomId, dateBooked,
                                                                 startDate, endDate, todaysDate, guests, totalPaid, totalRefund, currency,))

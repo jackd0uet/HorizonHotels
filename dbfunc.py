@@ -6,7 +6,7 @@ from mysql.connector import errorcode
 hostname = "localhost"
 username = "root"
 password = "password"
-db = "HH_DB"
+db = "hh_db_"
 
 def getConnection():
     try:

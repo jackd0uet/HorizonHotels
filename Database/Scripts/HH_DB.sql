@@ -37,7 +37,9 @@ CREATE TABLE bookings (
     FOREIGN KEY (customerId) REFERENCES customer(customerId)
     );
     
-CREATE TABLE cancelledBookings (
+DROP TABLE cancelledBookings;
+    
+CREATE TABLE cancelledbookings (
 	bookingId INT NOT NULL,
     customerId INT NOT NULL,
     roomId INT NOT NULL,
@@ -57,7 +59,7 @@ CREATE TABLE cancelledBookings (
     SELECT * FROM bookings;
     SELECT COUNT(*) FROM v WHERE startDate = '2022-03-10' and endDate = '2022-03-11' and roomType = 'Standard' and hotelCity = 'Aberdeen';
 
-CREATE VIEW V AS
+CREATE VIEW v AS
 	SELECT bookings.bookingId, bookings.roomId, bookings.startDate, bookings.endDate, bookings.guests,
     hotel.roomType, hotel.hotelCity
 FROM
@@ -120,7 +122,7 @@ select b.bookingId, b.customerId, b.roomId, b.dateBooked, b.startDate, b.endDate
     on b.roomId = h.roomId;
 
 drop view FULLBOOKINGINFO;
-CREATE VIEW FULLBOOKINGINFO as select b.bookingId, b.customerId, b.roomId, b.dateBooked, b.startDate, b.endDate, b.guests, b.totalFare, b.currency,
+CREATE VIEW fullbookinginfo as select b.bookingId, b.customerId, b.roomId, b.dateBooked, b.startDate, b.endDate, b.guests, b.totalFare, b.currency,
 	h.roomType, h.hotelCity, h.address
     from bookings b
     join hotel h
@@ -237,4 +239,50 @@ SELECT DISTINCT FROM hotel WHERE hotelCity = 'Aberdeen';
 Select * FROM hotel WHERE hotelCity = 'Hereford';
 
 UPDATE hotel SET address = "AB13 0AB" WHERE hotelCity = "Aberdeen" and roomId = 1;
+
+SELECT * FROM customer;
+
+
+USE HH_DB;
+SELECT * FROM customer;
+
+SELECT * FROM bookings;
+
+SELECT * FROM cancelledbookings;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
