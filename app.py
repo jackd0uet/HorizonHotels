@@ -794,7 +794,7 @@ def changePasswordForm():
                     print(str(data[0]))
                     print(oldPwd)
 
-                    if sha256_crypt.verify(oldPwd, str(data[0])):
+                    if sha256_crypt.verify(request.form['currentPwd'], str(data[0])):
                         conn = dbfunc.getConnection()
                         # If correct connect to DB.
                         if conn != None:
@@ -1450,20 +1450,11 @@ def contact():
 
 
 
-
-@app.route('/info/privacy/')
-def privacy():
-    return render_template('Info/Privacy.html')
-
-
+#Terms route
 @app.route('/info/terms/')
 def terms():
-    return render_template('Info/Terms_conditions.html')
+    return render_template('Info/Terms.html')
 
-
-@app.route('/search/')
-def search():
-    return render_template('search.html')
 
 
 if __name__ == '__main__':

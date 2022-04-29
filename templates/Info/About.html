@@ -1,28 +1,24 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <title>Horizon Holidays - About Us</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" type='text/css' href="{{ url_for('static', filename='styles/main.css') }}" />
-  </head>
+{% extends 'base.html' %}
 
-  <body>
-    <div class="header">
-      <a href="{{ url_for('index') }}"><h1>Horizon Holidays</h1></a>
-      <h2>About Us</h2>
+{% block header %}
+{% endblock %}
+
+{% block content %}
+<nav class="centre">
+  <ul class="aside">
+      <li><h2>About us</h2></li>
+      <li class="navbar"><span><button class="navbarButtons" onclick="window.location.href='{{ url_for('contact') }}';">Have feedback?</button></span></li>
+  </ul>
+</nav>
+
+
+<div class="row centre">
+  <div class="col-1 col-s-1"></div>
+    <div class="col-10 col-s-10">
+        <p>We are a UK based hotel firm with hotels in all major cities. Please find the contact us page above for any further questions you might have.</p>
     </div>
+    <div class="col-1 col-s-1"></div>
 
-    <div class="col-12">
-        <p>We are a UK based hotel firm with hotels in all major cities. Please find the contact us page below for any further questions you might have.</p>
-    </div>
+  </div>
 
-    <div class="col-12 aside">
-        <a href="{{ url_for('contact') }}"
-          ><h2>Still have questions? Click here to contact us.</h2></a
-        >
-      </div>
-      <div class="footer">
-        <a href="{{ url_for('privacy') }}">Privacy Statement</a>
-      </div>
-    </body>
-  </html>
+  {% endblock %}

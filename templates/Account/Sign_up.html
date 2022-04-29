@@ -1,6 +1,24 @@
 {% extends 'base.html' %} {% block header %} {% endblock %} {% block title %}
 Sign up {% endblock %} {% block content %}
-
+<body onload="maxAge()">
+  
+</body>
+<script>
+  function maxAge() {
+    var today = new Date();
+    var year = today.getFullYear();
+    var month = today.getMonth() + 1;
+    var day = today.getDate();           
+    if (month < 10) {
+        month = '0' + month; 
+    }
+    if (day < 10) {
+        day = '0' + day; 
+    }
+    today = year + '-' + month + '-' + day;
+    document.getElementById("dob").max = today;
+  }
+</script>
 <div class="row centre">
   <div class="col-1 col-s-1"></div>
 
@@ -33,7 +51,7 @@ Sign up {% endblock %} {% block content %}
           name="dob"
           id="dob"
           class="form"
-          placeholder="01/01/2000"
+          max=""
         />
         <br />
 

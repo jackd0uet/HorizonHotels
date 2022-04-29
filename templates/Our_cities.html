@@ -1,5 +1,44 @@
 {% extends 'base.html' %} {% block header %} {% endblock %} {% block title %}
 Our Cities{% endblock %} {% block content %}
+<body onload="latestBookingDate(), initialdate()">
+</body>
+<script>
+
+function initialdate(){
+    var today=new Date();
+    var year = today.getFullYear();
+    var month = today.getMonth() + 1;
+    var day = today.getDate();           
+    if (month < 10) {
+        month = '0' + month; 
+    }
+    if (day < 10) {
+        day = '0' + day; 
+    }
+    today = year + '-' + month + '-' + day;           
+    document.getElementById("sDate").min = today;            
+  }
+  function setenddate(){
+      var selectedstartdate = document.getElementById("sDate").value;
+      document.getElementById("eDate").min = selectedstartdate;
+  }
+  
+  function latestBookingDate(){
+    var today=new Date();
+    var year = today.getFullYear();
+    var month = today.getMonth() + 4;
+    var day = today.getDate();           
+    if (month < 10) {
+        month = '0' + month; 
+    }
+    if (day < 10) {
+        day = '0' + day; 
+    }
+    threeMonthsTime = year + '-' + month + '-' + day;
+    document.getElementById("sDate").max = threeMonthsTime;
+    document.getElementById("eDate").max = threeMonthsTime;
+  }
+</script>
 
 <nav class="centre">
   <ul class="aside">
@@ -10,10 +49,10 @@ Our Cities{% endblock %} {% block content %}
           <form class="form" id="ourCities" action="/our_cities_form/" method="POST">
               <div class="container">
                   <label for="sDate">Start Date: </label>
-                  <input type="date" name="sDate" id="sDate" class="form">
+                  <input type="date" name="sDate" id="sDate" class="form" min="" max="" onchange="setenddate()">
                   <br>
                   <label for="eDate">End Date: </label>
-                  <input type="date" name="eDate" id="eDate" class="form">
+                  <input type="date" name="eDate" id="eDate" class="form" max="" min="">
                   <br>
                   <label for="guests">Select number of guests:</label>
                   <select name="guests" id="guests">
