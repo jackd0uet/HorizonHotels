@@ -1,3 +1,4 @@
+#Jack Douet 21025153
 import mysql.connector
 from mysql.connector import errorcode
 
