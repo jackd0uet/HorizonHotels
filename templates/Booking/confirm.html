@@ -1,14 +1,31 @@
 <!--Jack Douet 21025153-->
 {% extends 'base.html' %} {% block header %} {% endblock %} {% block content %}
 
-<div class="row centre">
-  <div class="col-1 col-s-1"></div>
-  <div class="col-10 col-s-10">
-    <h1>Thank you for booking with Horizon Hotels!</h1>
-    <h3>
+
+    <nav class="centre">
+    <li><h2>Thank you for booking with Horizon Hotels!</h2></li>
+    <li><h3>
       We look forward to having you stay with us, all the details for your
       booking are below.
-    </h3>
+    </h3></li>
+    <li><h4>
+      You can view or amend your booking by going to your account page or by
+      pressing the button below.
+    </h4></li>
+    <li class="navbar">
+      <span
+        ><button
+          class="navbarButtons"
+          onclick="window.location.href='{{ url_for('myAccount') }}';"
+        >
+          Return to myAccount
+        </button></span
+      >
+    </li>
+  </nav>
+  <div class="row centre">
+    <div class="col-1 col-s-1"></div>
+    <div class="col-10 col-s-10">
     <table class="centre">
       <div class="overFlow">
       <tr>
@@ -33,24 +50,6 @@
       </tr>
     </table>
   </div>
-    
-    <h4>
-      You can view or amend your booking by going to your account page or by
-      pressing the button below.
-    </h4>
-  </div>
-  <div class="col-1 col-s-1"></div>
-</div>
-<div class="row centre">
-  <div class="col-5 col-s-5"></div>
-  <div class="col-2 col-s-2 menu">
-    <ul>
-      <li>
-        <a href="{{ url_for('account') }}"><h2>My Account</h2></a>
-      </li>
-    </ul>
-  </div>
-  <div class="col-5 col-s-5"></div>
-</div>
+
 
 {% endblock %}

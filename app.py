@@ -961,7 +961,11 @@ def booking():
 
                     # Work out fare in other currencies
                     fareEuros = fare * 1.2
+                    fareEuros = "{:.2f}".format(fareEuros)
+                    fareEuros = float(fareEuros)
                     fareUSD = fare * 1.6
+                    fareUSD = "{:.2f}".format(fareUSD)
+                    fareUSD = float(fareUSD)
 
                     # Append fares to booking data
 
